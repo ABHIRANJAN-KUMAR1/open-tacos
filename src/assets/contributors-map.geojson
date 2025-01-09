@@ -201,7 +201,7 @@
       "properties": {
         "firstName": "Yan",
         "githubId": "yryap",
-        "favoriteCrag": "75437da6-74af-53b8-8a96-e6633f515859" 
+        "favoriteCrag": "75437da6-74af-53b8-8a96-e6633f515859"
       },
       "geometry": {
         "type": "Point",
@@ -216,14 +216,28 @@
       "properties": {
         "firstName": "David",
         "githubId": "DavidWeisberg1",
-        "favoriteCrag": "64819304-d475-5c52-9b15-0a379192edaf" 
+        "favoriteCrag": "64819304-d475-5c52-9b15-0a379192edaf"
       },
       "geometry": {
         "type": "Point",
         "coordinates": [
           -85.40108,
           35.07379
-          
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { 
+        "firstName": "Michael",
+        "githubId": "mikeschen",
+        "favoriteCrag": "a6aebb1a-6568-55b6-92be-23d7138f50d4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -112.0740,
+          33.4484
         ]
       }
     }
