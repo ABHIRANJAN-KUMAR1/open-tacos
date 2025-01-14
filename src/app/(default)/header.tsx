@@ -1,5 +1,6 @@
 import clx from 'classnames'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import OpenBetaLogo from '@/assets/brand/openbeta-logo'
 import { DesktopHeader } from './components/DesktopHeader'
@@ -30,6 +31,33 @@ export const Logo: React.FC<{ size?: LogoSize, className?: string, withText?: bo
     <Link href='/' className='flex items-center gap-2'>
       <OpenBetaLogo className={clx(size, className)} />
       {withText && <span className='font-bold text-lg tracking-tight'>OpenBeta</span>}
+    </Link>
+  )
+}
+
+interface MobileLinkProps {
+  link: string
+  image: string
+  description: string
+  className?: string
+}
+
+/**
+ * Reusable mobile link component
+ */
+export const MobileLink: React.FC<MobileLinkProps> = ({ link, image, description, className }) => {
+  return (
+    <Link href={link} rel='noopener noreferrer' target='_blank' passHref className={className}>
+      <Image
+        src={image}
+        alt={description}
+        width={125}
+        height={37}
+        priority
+        style={{
+          maxWidth: 'none'
+        }}
+      />
     </Link>
   )
 }
