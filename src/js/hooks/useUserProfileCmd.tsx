@@ -16,7 +16,7 @@ export interface UpdateUsernameInput {
   avatar?: string
 }
 
-type UpdateUserPublicProfileInput = { userUuid: string } & Pick<UserPublicProfile, 'displayName' | 'bio' | 'website'>
+type UpdateUserPublicProfileInput = { userUuid: string } & Pick<UserPublicProfile, 'displayName' | 'bio' | 'website' | 'avatar'>
 
 type GetUsernameById = (input: GetUsernameByIdInput) => Promise<Username | null>
 
@@ -121,12 +121,13 @@ export default function useUserProfileCmd ({ accessToken = '' }: UseUserProfileC
     return res.data.getUserPublicProfileByUuid
   }
 
-  const updatePublicProfileCmd: UpdatePublicProfileCmd = async ({ userUuid, displayName, bio, website }: UpdateUserPublicProfileInput) => {
+  const updatePublicProfileCmd: UpdatePublicProfileCmd = async ({ userUuid, displayName, bio, website, avatar }: UpdateUserPublicProfileInput) => {
     const trimmedInput: UpdateUserPublicProfileInput = {
       userUuid,
       ...(displayName != null && { displayName }),
       ...(bio != null && { bio }),
-      ...(website != null && { website })
+      ...(website != null && { website }),
+      ...(avatar != null && { avatar })
     }
     try {
       const res = await graphqlClient.mutate<{ updateUserProfile?: boolean }, UpdateUserPublicProfileInput>({
@@ -147,16 +148,6 @@ export default function useUserProfileCmd ({ accessToken = '' }: UseUserProfileC
       return false
     }
   }
-  // const updatePublicProfile = async (userUuid: string): Promise<any | null> => {
-  //   const res = await graphqlClient.mutate<GetUserPublicProfileByUuidReturn, { userUuid: string }>({
-  //     query: QUERY_GET_USER_PUBLIC_PROFILE_BY_UUID,
-  //     variables: {
-  //       userUuid
-  //     },
-  //     fetchPolicy: 'no-cache'
-  //   })
-  //   return res.data.getUserPublicProfileByUuid
-  // }
 
   return { getUsernameById, updateUsername, doesUsernameExist, getUserPublicPage, getUserPublicProfileByUuid, updatePublicProfileCmd }
 }

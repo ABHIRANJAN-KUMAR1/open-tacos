@@ -7,9 +7,11 @@ import { MediaConnection, MediaWithTags } from '../types'
 export interface UserGalleryState {
   mediaConnection: MediaConnection
   uploading: boolean
+  avatarUrl: string
 }
 
 export interface UserGalleryStore extends UserGalleryState {
+  setAvatarUrl: (avatarUrlState: string) => void
   setUploading: (uploadingState: boolean) => void
   addToFront: (nextConnection: MediaConnection) => void
   append: (nextConnection: MediaConnection) => void
@@ -18,7 +20,7 @@ export interface UserGalleryStore extends UserGalleryState {
   reset: (nextConnection: MediaConnection) => void
 }
 
-const DEFAUL_STATES: UserGalleryState = {
+const DEFAULT_STATES: UserGalleryState = {
   mediaConnection: {
     edges: [],
     pageInfo: {
@@ -26,7 +28,8 @@ const DEFAUL_STATES: UserGalleryState = {
       endCursor: ''
     }
   },
-  uploading: false
+  uploading: false,
+  avatarUrl: ''
 }
 
 const OPTIONS = {
@@ -38,7 +41,15 @@ const OPTIONS = {
  * Data store for UserGallery.
  */
 export const useUserGalleryStore = create<UserGalleryStore>()(devtools((set, get) => ({
-  ...DEFAUL_STATES,
+  ...DEFAULT_STATES,
+
+  /**
+   * Updates the current avatar when editing profile.
+   * @param avatarUrlState
+   */
+  setAvatarUrl: (avatarUrlState) => set((state) => ({
+    avatarUrl: avatarUrlState
+  }), false, 'setAvatarUrl'),
 
   setUploading: (uploadingState) => set((state) => ({
     uploading: uploadingState

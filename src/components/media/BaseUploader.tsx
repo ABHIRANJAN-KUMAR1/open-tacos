@@ -36,6 +36,44 @@ export const BaseUploader: React.FC<BaseUploaderProps> = ({ tagType, uuid, class
 }
 
 /**
+ * Basic profile photo uploader component that handles authentication without dropzone
+ */
+export const BaseProfilePhotoUploader: React.FC<BaseUploaderProps> = ({
+  uuid,
+  className = '',
+  children
+}) => {
+  const session = useSession()
+
+  const { getInputProps, openFileDialog } = usePhotoUploader({ uuid, isProfilePhoto: true })
+
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (event) => {
+    if (session.status !== 'authenticated') {
+      event.stopPropagation()
+      void signIn('auth0')
+      return
+    }
+
+    openFileDialog()
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      className={className}
+      aria-label='Edit photo'
+      type='button'
+    >
+      <input
+        aria-label='Upload profile photo'
+        {...getInputProps()}
+      />
+      {children}
+    </button>
+  )
+}
+
+/**
  * Inject current page type and uuid to the BaseUploader
  */
 export const BaseUploaderWithNext13Context: React.FC<Omit<BaseUploaderProps, 'tagType' | 'uuid'>> = ({ className, children }) => {

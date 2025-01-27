@@ -11,10 +11,12 @@ import { MediaFormat, TagTargetType } from '../types'
 import { NewEmbeddedEntityTag } from '../graphql/gql/media'
 import { useUserGalleryStore } from '../stores/useUserGalleryStore'
 import { invalidateAreaPageCache, legacyInvalidateClimbPageCache } from '../utils'
+import useUserProfileCmd from './useUserProfileCmd'
 
 interface UsePhotoUploaderProps {
   tagType?: TagTargetType
   uuid?: string
+  isProfilePhoto?: boolean
 }
 interface PhotoUploaderReturnType {
   getInputProps: <T extends DropzoneInputProps>(props?: T) => T
@@ -40,12 +42,14 @@ async function readFile (file: File): Promise<ProgressEvent<FileReader>> {
  * is all encapsulated here, as well as some other api shorthand.
  * { onUploaded }: UsePhotoUploaderProps
  * */
-export default function usePhotoUploader ({ tagType, uuid }: UsePhotoUploaderProps): PhotoUploaderReturnType {
+export default function usePhotoUploader ({ tagType, uuid, isProfilePhoto = false }: UsePhotoUploaderProps): PhotoUploaderReturnType {
   const router = useRouter()
+  const setAvatarUrl = useUserGalleryStore(store => store.setAvatarUrl)
   const setUploading = useUserGalleryStore(store => store.setUploading)
   const isUploading = useUserGalleryStore(store => store.uploading)
   const { data: sessionData, status: sessionStatus } = useSession()
   const { addMediaObjectsCmd } = useMediaCmd()
+  const { updatePublicProfileCmd } = useUserProfileCmd({ accessToken: sessionData?.accessToken as string })
 
   const ref = useRef({
     hasErrors: false
@@ -77,7 +81,10 @@ export default function usePhotoUploader ({ tagType, uuid }: UsePhotoUploaderPro
     }
     try {
       const url = await uploadPhoto(name, imageData)
-
+      if (isProfilePhoto) {
+        updatePublicProfileCmd({ userUuid, avatar: url }).catch(console.error)
+        setAvatarUrl(url)
+      }
       const res = await addMediaObjectsCmd([{
         userUuid,
         mediaUrl: url,
@@ -93,7 +100,8 @@ export default function usePhotoUploader ({ tagType, uuid }: UsePhotoUploaderPro
       if (res == null) {
         ref.current.hasErrors = true
         await deleteMediaFromStorage(url)
-      } else {
+      } else if (!isProfilePhoto) {
+        // update User Gallery
         if (tagType === 1 && uuid != null) await invalidateAreaPageCache(uuid)
         if (tagType === 0 && uuid != null) await legacyInvalidateClimbPageCache(uuid)
         router.refresh() // Ask NextJS to update page props

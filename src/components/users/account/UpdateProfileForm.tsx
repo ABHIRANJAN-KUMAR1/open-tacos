@@ -4,9 +4,13 @@ import { useSession, signIn } from 'next-auth/react'
 import { toast } from 'react-toastify'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { Pencil } from '@phosphor-icons/react/dist/ssr'
 
 import { Input, TextArea } from '../../ui/form'
 import useUserProfileCmd from '../../../js/hooks/useUserProfileCmd'
+import { BaseProfilePhotoUploader } from '../../media/BaseUploader'
+import { ProfileImage } from '../PublicProfile'
+import { useUserGalleryStore } from '../../../js/stores/useUserGalleryStore'
 
 const validationSchema = z
   .object({
@@ -43,13 +47,19 @@ export const UpdateProfileForm: React.FC = () => {
 
   const userUuid = session.data?.user.metadata.uuid
 
+  const setAvatarUrl = useUserGalleryStore(store => store.setAvatarUrl)
+  const avatar = useUserGalleryStore(store => store.avatarUrl)
+
   useEffect(() => {
     if (userUuid != null) {
       const doAsync = async (): Promise<void> => {
         const profile = await getUserPublicProfileByUuid(userUuid)
         if (profile != null) {
-          const { displayName, bio, website } = profile
+          const { displayName, bio, website, avatar } = profile
           reset({ displayName, bio, website })
+          if (avatar != null) {
+            setAvatarUrl(avatar)
+          }
         }
       }
       void doAsync()
@@ -88,15 +98,17 @@ export const UpdateProfileForm: React.FC = () => {
     return () => window.removeEventListener('beforeunload', event)
   }, [isDirty])
 
-  const shouldDisableSumit = !isValid || isSubmitting || !isDirty || userUuid == null
+  const shouldDisableSubmit = !isValid || isSubmitting || !isDirty || userUuid == null
   return (
     <div className='w-full lg:max-w-md'>
 
       <h2 className=''>Edit Profile</h2>
 
+      {avatar !== null && avatar !== '' && <EditProfileImage avatar={avatar} key={avatar} />}
+
       <FormProvider {...form}>
         {/* eslint-disable-next-line */}
-        <form onSubmit={handleSubmit(submitHandler)} className='mt-10 flex flex-col'>
+        <form onSubmit={handleSubmit(submitHandler)} className='flex flex-col'>
           <Input
             name='displayName'
             label='Display name'
@@ -123,12 +135,23 @@ export const UpdateProfileForm: React.FC = () => {
 
           <button
             type='submit'
-            disabled={shouldDisableSumit}
+            disabled={shouldDisableSubmit}
             className='mt-8 btn btn-primary btn-solid'
           >Save
           </button>
         </form>
       </FormProvider>
+    </div>
+  )
+}
+
+export const EditProfileImage = ({ avatar }: { avatar: string }): JSX.Element => {
+  return (
+    <div className='relative inline-block'>
+      <BaseProfilePhotoUploader className='absolute bottom-1 right-1  bg-gray-800 bg-opacity-75 p-2 rounded-full transition-opacity duration-200 hover:bg-opacity-100 z-10'>
+        <Pencil color='#FFFFFF' />
+      </BaseProfilePhotoUploader>
+      <ProfileImage avatar={avatar} />
     </div>
   )
 }

@@ -1,11 +1,13 @@
-import { MouseEventHandler } from 'react'
+import { MouseEventHandler, useState } from 'react'
 import Link from 'next/link'
+import { UserCircle } from '@phosphor-icons/react/dist/ssr'
 
 import { UserPublicProfile } from '../../js/types/User'
 import EditProfileButton from './EditProfileButton'
 import ImportFromMtnProj from './ImportFromMtnProj'
 import APIKeyCopy from './APIKeyCopy'
 import usePermissions from '../../js/hooks/auth/usePermissions'
+import { DefaultLoader } from '../../js/sirv/util'
 
 interface PublicProfileProps {
   userProfile: UserPublicProfile
@@ -20,10 +22,11 @@ export default function PublicProfile ({ userProfile }: PublicProfileProps): JSX
   if (website != null) {
     websiteWithScheme = website.startsWith('http') ? website : `//${website}`
   }
+
   return (
     <section className='mx-auto max-w-screen-sm px-4 md:px-0 md:grid md:grid-cols-3'>
       <div className='hidden md:block pr-5'>
-        <img className='grayscale  object-scale-down w-24 h-24 rounded-full' src={avatar} />
+        {avatar != null && avatar !== '' && <ProfileImage avatar={avatar} />}
       </div>
       <div className='md:col-span-2 text-medium text-primary '>
         <div className='flex flex-row items-center gap-x-2 max-w-xs'>
@@ -65,6 +68,27 @@ export default function PublicProfile ({ userProfile }: PublicProfileProps): JSX
  */
 const prettifyUrl = (url: string): string => {
   return url.replace(/^(https?:)?\/\//g, '').replace(/\/$/g, '')
+}
+
+export const ProfileImage = ({ avatar }: { avatar: string }): JSX.Element => {
+  // returns auth0 avatar assigned when user is created, if no profile pic is uploaded
+  const avatarSrc = avatar.includes('gravatar') ? avatar : DefaultLoader({ src: avatar, width: 200 })
+  const [imageNotFound, setImageNotFound] = useState(false)
+
+  return (
+    <>
+      {imageNotFound
+        ? <UserCircle size={32} weight='fill' className='w-24 h-24 rounded-full text-gray-500' />
+        : (
+          <img
+            className='object-cover w-24 h-24 rounded-full'
+            src={avatarSrc}
+            alt='Profile Photo'
+            onError={() => setImageNotFound(true)}
+          />
+          )}
+    </>
+  )
 }
 
 export const TinyProfile = ({ userProfile, onClick }: PublicProfileProps): any => {

@@ -11,6 +11,11 @@ jest.mock('next-auth/react', () => ({
   useSession: mockedUseSession
 }))
 
+jest.mock('../../media/BaseUploader.tsx', () => ({
+  __esModule: true,
+  BaseProfilePhotoUploader: () => <button />
+}))
+
 // Mock import ticks button beacause we only care whether the button is there
 // and to avoid mocking GQL dependency.
 const ImportFromMtnProjMock = jest.fn()
