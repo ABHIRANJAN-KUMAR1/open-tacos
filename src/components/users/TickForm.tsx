@@ -2,11 +2,18 @@ import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useMutation } from '@apollo/client'
 import { useSession } from 'next-auth/react'
-import { TickType } from '../../js/types'
-import { graphqlClient } from '../../js/graphql/Client'
-import { MUTATION_ADD_TICK } from '../../js/graphql/gql/fragments'
+import { TickType } from '@/js/types'
+import Tooltip from '../ui/Tooltip'
+import { graphqlClient } from '@/js/graphql/Client'
+import { MUTATION_ADD_TICK } from '@/js/graphql/gql/fragments'
 import ComboBox from '../ui/ComboBox'
 import * as Yup from 'yup'
+import { Info } from '@phosphor-icons/react/dist/ssr'
+
+const climbingGlossaryLink = 'https://en.wikipedia.org/wiki/Glossary_of_climbing_terms#'
+const CustomTooltip: React.FC<any> = () => {
+  return (<p>A Glossary of Climbing Terms<br />can be found <a href={climbingGlossaryLink} target='_blank' rel='noreferrer' className='ml-2 mt-1 text-blue-500 underline'>Here</a></p>)
+}
 
 // validation schema for ticks
 const TickSchema = Yup.object().shape({
@@ -19,34 +26,75 @@ const TickSchema = Yup.object().shape({
     .required('Something went wrong fetching the climb Id, please try again'),
   userId: Yup.string()
     .required('Something went wrong fetching your user Id, please try again'),
-  style: Yup.string()
-    .required('Please choose an ascent style'),
-  attemptType: Yup.string()
-    .required('Please choose an ascent type'),
+  style: Yup.string(),
+  attemptType: Yup.string(),
   dateClimbed: Yup.date()
     .required('Please include a date')
     .max(new Date(), 'Please include a date in the past'),
   grade: Yup.string()
-    .required('Something went wrong fetching the climbs grade, please try again')
 })
+
 /**
  * Options for the dropdown comboboxes
- * Feel free to add any you think are valuable for our users
- */
-const styles = [
-  { id: 1, name: 'Solo' },
-  { id: 2, name: 'TR' },
-  { id: 3, name: 'Follow' },
-  { id: 4, name: 'Lead' },
-  { id: 5, name: 'Boulder' }
+ * Tick validation logic is complicated. see [tick_logic.md](https://github.com/OpenBeta/openbeta-graphql/blob/develop/documentation/tick_logic.md).
+ **/
+const allStyles = [
+  { id: 1, name: 'Lead' },
+  { id: 2, name: 'Follow' },
+  { id: 3, name: 'TR' },
+  { id: 4, name: 'Solo' },
+  { id: 5, name: 'Boulder' },
+  { id: 6, name: 'Aid' }
 ]
 
-const attemptTypes = [
+const allAttemptTypes = [
   { id: 1, name: 'Onsight' },
   { id: 2, name: 'Flash' },
   { id: 3, name: 'Redpoint' },
-  { id: 4, name: 'Pinkpoint' }
+  { id: 4, name: 'Pinkpoint' },
+  { id: 5, name: 'Send' },
+  { id: 6, name: 'Attempt' },
+  { id: 7, name: 'Frenchfree' }
 ]
+
+function hasKey (climbType: object, myList: string[]): boolean { return Object.keys(climbType).some(key => myList.includes(key)) }
+
+function stylesForClimbType (climbType: object): Array<{ id: number, name: string }> {
+  const leadable = hasKey(climbType, ['trad', 'sport', 'snow', 'ice', 'mixed', 'alpine'])
+  const topropeable = hasKey(climbType, ['tr']) || (leadable)
+  const aidable = hasKey(climbType, ['aid'])
+  const boulderable = hasKey(climbType, ['bouldering'])
+  const soloable = hasKey(climbType, ['deepwatersolo']) || leadable || aidable || (topropeable && !boulderable)
+
+  let styles: Array<{ id: number, name: string }> = []
+
+  if (leadable) { styles.push(...allStyles.filter(style => ['Lead', 'Follow'].includes(style.name))) }
+  if (boulderable) { styles.push(...allStyles.filter(style => ['Boulder'].includes(style.name))) }
+  if (topropeable) { styles.push(...allStyles.filter(style => ['TR'].includes(style.name))) }
+  if (aidable) { styles.push(...allStyles.filter(style => ['Aid'].includes(style.name))) }
+  if (soloable) { styles.push(...allStyles.filter(style => ['Solo'].includes(style.name))) }
+  if (styles.length === 0) { styles = [...allStyles] } // If a climb doesn't have a type, anything goes
+  styles.push({ id: 10, name: '\u00A0' })
+  return styles
+}
+
+function attemptTypesForStyle (styleName: string): Array<{ id: number, name: string }> {
+  const emptyOption = { id: 10, name: '\u00A0' }
+  switch (styleName) {
+    case 'Lead':
+      return [...allAttemptTypes.filter(type => ['Onsight', 'Flash', 'Redpoint', 'Pinkpoint', 'Attempt', 'Frenchfree'].includes(type.name)), emptyOption]
+    case 'Solo':
+      return [...allAttemptTypes.filter(type => ['Onsight', 'Flash', 'Redpoint', 'Attempt'].includes(type.name)), emptyOption]
+    case 'Boulder':
+      return [...allAttemptTypes.filter(type => ['Flash', 'Send', 'Attempt'].includes(type.name)), emptyOption]
+    case 'TR':
+    case 'Follow':
+    case 'Aid':
+      return [...allAttemptTypes.filter(type => ['Send', 'Attempt'].includes(type.name)), emptyOption]
+    default:
+      return [emptyOption]
+  }
+}
 
 interface Props {
   open: boolean
@@ -57,11 +105,15 @@ interface Props {
   climbId: string
   name?: string
   grade?: string
+  climbType: object
 }
 
-export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, climbId, name, grade }: Props): JSX.Element {
-  const [style, setStyle] = useState(styles[1])
-  const [attemptType, setAttemptType] = useState(attemptTypes[1])
+export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, climbId, name, grade, climbType }: Props): JSX.Element {
+  const styles = stylesForClimbType(climbType)
+  const [style, setStyle] = useState(styles[0])
+
+  const [attemptTypes, setAttemptTypes] = useState(attemptTypesForStyle(style.name))
+  const [attemptType, setAttemptType] = useState(attemptTypes[0])
   const [dateClimbed, setDateClimbed] = useState<string>(new Date().toLocaleDateString('fr-CA')) // Default is today, use fr-CA to get YYYY-MM-DD format.
   const [notes, setNotes] = useState<string>('')
   const [errors, setErrors] = useState<string[]>()
@@ -78,9 +130,18 @@ export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, cl
    */
   function resetInputs (): void {
     setDateClimbed(new Date().toLocaleDateString('fr-CA'))
-    setAttemptType(attemptTypes[1])
+    const newAttemptTypes = attemptTypesForStyle(styles[0].name)
+    setAttemptTypes(newAttemptTypes)
+    setAttemptType(newAttemptTypes[0])
     setNotes('')
-    setStyle(styles[1])
+    setStyle(styles[0])
+  }
+
+  function handleStyleChange (newStyle: { id: number, name: string }): void {
+    setStyle(newStyle)
+    const newAttemptTypes = attemptTypesForStyle(newStyle.name)
+    setAttemptTypes(newAttemptTypes)
+    setAttemptType(newAttemptTypes[0])
   }
 
   async function submitTick (): Promise<void> {
@@ -90,8 +151,8 @@ export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, cl
       notes,
       climbId,
       userId: session.data?.user.metadata.uuid,
-      style: style.name,
-      attemptType: attemptType.name,
+      style: style.name === '\u00A0' ? undefined : style.name,
+      attemptType: attemptType.name === '\u00A0' ? undefined : attemptType.name,
       dateClimbed: new Date(Date.parse(`${dateClimbed}T00:00:00`)), // Date.parse without timezone converts dateClimbed into local timezone.
       grade,
       source: 'OB' // source manually set as Open Beta
@@ -121,7 +182,8 @@ export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, cl
       .catch((error) => {
         const gqlErrs = error.graphQLErrors ?? []
         if (gqlErrs.length > 0) {
-          switch (gqlErrs[0].extensions.exception.code) {
+          const code = gqlErrs[0].extensions.exception?.code
+          switch (code) {
             case 11000:
             case 11001:
               setErrors(['Error, duplicate tick found'])
@@ -137,7 +199,7 @@ export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, cl
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as='div' className='relative z-10' onClose={() => setOpen(false)}>
+      <Dialog as='div' className='relative z-50' onClose={() => setOpen(false)}>
         <Transition.Child
           as={Fragment}
           enter='ease-out duration-300'
@@ -150,7 +212,7 @@ export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, cl
           <div className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
         </Transition.Child>
 
-        <div className='fixed z-10 inset-0 overflow-y-auto'>
+        <div className='fixed z-50 inset-0 overflow-y-auto'>
           <div className='flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0'>
             <Transition.Child
               as={Fragment}
@@ -177,15 +239,23 @@ export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, cl
                       className='py-2 px-3 border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md'
                     />
                   </div>
-                  <ComboBox options={styles} value={style} onChange={setStyle} label='Style' />
-                  <ComboBox options={attemptTypes} value={attemptType} onChange={setAttemptType} label='Attempt Type' />
+                  <ComboBox options={styles} value={style} onChange={handleStyleChange} label='Style' />
+                  <div className='flex items-center'>
+                    <label htmlFor='attemptType' className='block text-sm font-medium text-gray-700'>
+                      Attempt Type
+                    </label>
+                    <Tooltip content={<CustomTooltip />}>
+                      <Info className='h-5 w-5' />
+                    </Tooltip>
+                  </div>
+                  <ComboBox options={attemptTypesForStyle(style.name)} value={attemptType} onChange={setAttemptType} label='' />
                   <div>
                     <label htmlFor='comment' className='block text-sm font-medium text-gray-700 mt-2'>
                       Notes
                     </label>
                     <div className='mt-1'>
                       <textarea
-                        rows={4}
+                        rows={6}
                         name='comment'
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
