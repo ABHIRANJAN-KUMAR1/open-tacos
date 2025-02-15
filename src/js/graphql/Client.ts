@@ -3,7 +3,11 @@ import { onError } from '@apollo/client/link/error'
 
 const uri: string = process.env.NEXT_PUBLIC_API_SERVER ?? ''
 const httpLinkPro = new HttpLink({
-  uri
+  uri,
+  // Prevent Next.js fetch caching
+  fetchOptions: {
+    cache: 'no-store'
+  }
 })
 const errorLink = onError(({ graphQLErrors, networkError, ...rest }) => {
   console.error('#################### GQL Error  ####################')
