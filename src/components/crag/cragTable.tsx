@@ -2,10 +2,10 @@ import { getScoreForSort, GradeScales } from '@openbeta/sandbag'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { Climb } from '../../js/types'
-import { getSetTypes } from '../ui/RouteTypeChips'
 import ButtonGroup from '../../components/ui/ButtonGroup'
 import { Button } from '../../components/ui/Button'
 import { summarize } from '../ui/Description'
+import { getDisciplineList } from '@/js/utils'
 // import { APIFavouriteCollections } from '../../pages/api/user/fav'
 
 interface CragTableProps {
@@ -87,7 +87,7 @@ function ClimbItem (props: { favs: string[], climb: Climb, hideSummary: boolean 
       )}
 
       <div className='text-sm mt-2'>
-        Discipline(s): {getSetTypes(type).join(', ')}
+        Discipline(s): {getDisciplineList(type).join(', ')}
       </div>
     </div>
   )
