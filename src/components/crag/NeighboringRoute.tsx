@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { CaretCircleLeft, CaretCircleRight } from '@phosphor-icons/react/dist/ssr'
 import clx from 'classnames'
 
 import Grade from '@/js/grades/Grade'
@@ -38,7 +37,7 @@ const NeighboringRoute: React.FC<{ climb: Climb, gradeStr: String | undefined, i
   const url = getClimbPageFriendlyUrl(climb.id, climb.name)
   return (
     <Link className={clx('btn btn-lg no-animation flex items-center', isLeftRoute ? 'flex-row' : ' flex-row-reverse')} href={url}>
-      {isLeftRoute ? <CaretCircleLeft size={28} /> : <CaretCircleRight size={28} />}
+      {isLeftRoute ? '<' : '>'}
       <div className='hidden lg:flex flex-col gap-y-1 content-start mx-4 text-secondary'>
         <div className='text-sm'>{climb.name}</div>
         <div className='text-xs '>{gradeStr}</div>

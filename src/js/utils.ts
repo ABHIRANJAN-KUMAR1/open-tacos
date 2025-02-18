@@ -289,21 +289,35 @@ export const getAreaPageFriendlyUrl = (uuid: string, areaName: string): string =
 export const getClimbPageFriendlyUrl = (uuid: string, climbName: string): string => `/climb/${uuid}/${getFriendlySlug(climbName)}`
 
 /**
- * Bust area page cache
+ * Invalidate area page cache
  */
 export const invalidateAreaPageCache = async (uuid: string): Promise<void> => {
   try {
-    await fetch(`/api/updateAreaPage?s=${uuid}`)
+    await fetch(`/api/invalidateAreaPageCache?uuid=${uuid}`)
   } catch (e) {
-    console.log('Invalidating area page cache', e)
+    console.log('Error invalidating area page cache', e)
   }
 }
 
-export const legacyInvalidateClimbPageCache = async (uuid: string): Promise<void> => {
+/**
+ * Invalidate climb page cache
+ */
+export const invalidateClimbPageCache = async (uuid: string): Promise<void> => {
   try {
-    await fetch(`/api/revalidate?c=${uuid}`)
+    await fetch(`/api/invalidateClimbPageCache?uuid=${uuid}`)
   } catch (e) {
-    console.log('Invalidating climb page cache', e)
+    console.log('Error invalidating climb page cache', e)
+  }
+}
+
+/**
+ * Invalidate home page cache
+ */
+export const invalidateHomePageCache = async (): Promise<void> => {
+  try {
+    await fetch('/api/invalidateHomePageCache')
+  } catch (e) {
+    console.log('Error invalidating home page cache', e)
   }
 }
 

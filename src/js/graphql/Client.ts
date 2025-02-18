@@ -2,13 +2,8 @@ import { ApolloClient, from, HttpLink, InMemoryCache } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 
 const uri: string = process.env.NEXT_PUBLIC_API_SERVER ?? ''
-const httpLinkPro = new HttpLink({
-  uri,
-  // Prevent Next.js fetch caching
-  fetchOptions: {
-    cache: 'no-store'
-  }
-})
+const httpLinkPro = new HttpLink({ uri })
+
 const errorLink = onError(({ graphQLErrors, networkError, ...rest }) => {
   console.error('#################### GQL Error  ####################')
 

@@ -68,5 +68,8 @@ module.exports = {
         permanent: false
       }
     ]
+  },
+  experimental: {
+    optimizePackageImports: ['@phosphor-icons/react']
   }
 }
