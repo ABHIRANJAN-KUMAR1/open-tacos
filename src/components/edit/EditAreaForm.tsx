@@ -40,6 +40,13 @@ export const AREA_DESCRIPTION_FORM_VALIDATION_RULES: RulesType = {
   }
 }
 
+export const AREA_LOCATION_FORM_VALIDATION_RULES: RulesType = {
+  maxLength: {
+    value: 10000,
+    message: 'Maximum 10,000 characters.'
+  }
+}
+
 export interface ChildAreaBaseProps {
   areaUuid: string
   areaName: string
