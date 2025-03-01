@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 import { FolderArrowDownIcon } from '@heroicons/react/24/outline'
 import { signIn, useSession } from 'next-auth/react'
@@ -23,7 +22,6 @@ const pattern = /^https:\/\/www.mountainproject.com\/user\/\d{9}\/[a-zA-Z-]*/
  * @returns JSX element
  */
 export function ImportFromMtnProj ({ username }: Props): JSX.Element {
-  const router = useRouter()
   const [mpUID, setMPUID] = useState('')
   const session = useSession()
   const [show, setShow] = useState<boolean>(false)
@@ -53,12 +51,12 @@ export function ImportFromMtnProj ({ username }: Props): JSX.Element {
           toast.info(
             <>
               {count} ticks have been imported! 🎉 <br />
-              Redirecting in a few seconds...`
+              Redirecting in a few seconds...
             </>
           )
 
           setTimeout(() => {
-            void router.replace(`/u2/${username}`)
+            window.history.pushState({}, '', `/u2/${username}`)
           }, 2000)
           setShow(false)
         } else {

@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
-
 import { LightBulbIcon } from '@heroicons/react/24/outline'
 import ContentLoader from 'react-content-loader'
+import Image from 'next/image'
 
 import { MediaWithTags } from '../../../js/types'
 import TagList from '../TagList'
@@ -10,7 +10,6 @@ import ResponsiveImage from './ResponsiveImage'
 import AddTagCta from './AddTagCta'
 import { WithPermission } from '../../../js/types/User'
 import DesktopModal from './DesktopModal'
-import { DefaultLoader } from '../../../js/sirv/util'
 
 interface SlideViewerProps {
   isOpen: boolean
@@ -19,7 +18,6 @@ interface SlideViewerProps {
   imageList: MediaWithTags[]
   userinfo: JSX.Element
   auth: WithPermission
-  baseUrl: string
   onNavigate: (newIndex: number) => void
 }
 
@@ -33,7 +31,6 @@ export default function SlideViewer ({
   imageList,
   userinfo,
   auth,
-  baseUrl,
   onNavigate
 }: SlideViewerProps): JSX.Element {
   const currentImage = imageList[initialIndex]
@@ -88,9 +85,11 @@ export const SingleViewer = ({ loaded, media, userinfo, auth, keyboardTip = true
     <>
       <div className='block relative overflow-hidden min-w-[350px] min-h-[300px]'>
         {loaded && media?.mediaUrl != null
-          ? (<img
-              src={DefaultLoader({ src: media.mediaUrl, width: 1200 })}
+          ? (<Image
+              src={media.mediaUrl}
+              alt='user image'
               width={1200}
+              height={700}
               sizes='100vw'
               className='bg-gray-100 w-auto h-[100%] max-h-[700px]'
              />)

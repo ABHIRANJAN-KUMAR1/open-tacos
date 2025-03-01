@@ -2,18 +2,18 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import type UserGalleryType from '../UserGallery'
-import { userMedia } from './data'
-import { UserPublicPage } from '../../../js/types/User'
-import { UseMediaCmdReturn } from '../../../js/hooks/useMediaCmd'
+import { userMedia } from '@/components/media/__tests__/data'
+import { UserPublicPage } from '@/js/types/User'
+import { UseMediaCmdReturn } from '@/js/hooks/useMediaCmd'
 
-jest.mock('next/router')
+jest.mock('next/navigation', () => require('../../../../../../__mocks__/next/router'))
 
-jest.mock('../../../js/hooks/useResponsive')
-jest.mock('../../../js/hooks/auth/usePermissions')
-jest.mock('../../../js/graphql/api')
-jest.mock('../../../js/graphql/Client')
+jest.mock('../../../../../js/hooks/useResponsive')
+jest.mock('../../../../../js/hooks/auth/usePermissions')
+jest.mock('../../../../../js/graphql/api')
+jest.mock('../../../../../js/graphql/Client')
 
-jest.mock('../UploadCTA', () => ({
+jest.mock('../../../../../components/media/UploadCTA.tsx', () => ({
   __esModule: true,
   default: jest.fn()
 }))
@@ -22,16 +22,13 @@ const fetchMoreMediaForward = jest.fn()
 
 fetchMoreMediaForward.mockResolvedValueOnce(userMedia.mediaConnection)
 
-jest.mock('../../../js/hooks/useMediaCmd', () => ({
+jest.mock('../../../../../js/hooks/useMediaCmd', () => ({
   __esModule: true,
   default: (): Partial<UseMediaCmdReturn> => ({ fetchMoreMediaForward })
 }))
 
-const useResponsive = jest.requireMock('../../../js/hooks/useResponsive')
-const usePermissions = jest.requireMock('../../../js/hooks/auth/usePermissions')
-
-// eslint-disable-next-line
-const { pushFn, replaceFn } = jest.requireMock('next/router')
+const useResponsive = jest.requireMock('../../../../../js/hooks/useResponsive')
+const usePermissions = jest.requireMock('../../../../../js/hooks/auth/usePermissions')
 
 const useResponsiveMock = jest.spyOn(useResponsive, 'default')
 useResponsiveMock.mockReturnValue({ isDesktop: false, isMobile: true, isTablet: true })
@@ -56,6 +53,7 @@ describe('Image gallery', () => {
     // why async import?  see https://github.com/facebook/jest/issues/10025#issuecomment-716789840
     const module = await import('../UserGallery')
     UserGallery = module.default
+    global.history.pushState = jest.fn()
   })
 
   test('[Desktop] Image can handle clicks and display slideshow', async () => {
@@ -77,20 +75,9 @@ describe('Image gallery', () => {
 
     await user.click(images[0]) // click on the first image
 
-    expect(pushFn).toBeCalled()
+    expect(global.history.pushState).toBeCalled()
 
     expect(screen.queryAllByRole('dialog', { name: username })).not.toBeNull()
-
-    // expect(screen.queryByRole('button', { name: 'previous' })).toBeNull() // Previous button shouldn't be there
-    // expect(screen.queryByRole('button', { name: 'next' })).toBeEnabled()
-
-    // await user.click(screen.getByRole('button', { name: 'next' }))
-
-    // expect(replaceFn).toBeCalled() // router should update browser url
-
-    // await user.click(screen.getByRole('button', { name: 'close' }))
-
-    // expect(screen.queryByRole('button', { name: 'next' })).toBeNull() // image viewer no longer visiable
   })
 })
 

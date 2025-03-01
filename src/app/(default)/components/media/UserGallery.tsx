@@ -1,20 +1,23 @@
+'use client'
 import React, { useCallback, useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { basename } from 'path'
 import clx from 'classnames'
 import InfiniteScroll from 'react-infinite-scroll-component'
 
-import UserMedia from './UserMedia'
-import MobileMediaCard from './MobileMediaCard'
-import UploadCTA from './UploadCTA'
-import SlideViewer from './slideshow/SlideViewer'
-import { TinyProfile } from '../users/PublicProfile'
-import { UserPublicPage } from '../../js/types/User'
-import { useResponsive } from '../../js/hooks'
-import TagList from './TagList'
-import usePermissions from '../../js/hooks/auth/usePermissions'
-import useMediaCmd from '../../js/hooks/useMediaCmd'
-import { useUserGalleryStore } from '../../js/stores/useUserGalleryStore'
+import UserMedia from '@/components/media/UserMedia'
+import MobileMediaCard from '@/components/media/MobileMediaCard'
+import UploadCTA from '@/components/media/UploadCTA'
+import SlideViewer from '@/components/media/slideshow/SlideViewer'
+import { TinyProfile } from '@/components/users/PublicProfile'
+import { UserPublicPage } from '@/js/types/User'
+import { useResponsive } from '@/js/hooks'
+import TagList from '@/components/media/TagList'
+import usePermissions from '@/js/hooks/auth/usePermissions'
+import useMediaCmd from '@/js/hooks/useMediaCmd'
+import { useUserGalleryStore } from '@/js/stores/useUserGalleryStore'
+import { relayMediaConnectionToMediaArray } from '@/js/utils'
+import { useSession } from 'next-auth/react'
 
 export interface UserGalleryProps {
   uid: string
@@ -36,15 +39,15 @@ export interface UserGalleryProps {
  * 1. Component will start with the most recent 6 (see A.1 above)
  * 2. When the user scrolls down, fetch the next 6 (cache hit)
  *
- * Simplifying component Todos:
- *  - simplify back button logic with Next Layout in v13
- *
  * See also:
  * - GQL pagination: https://graphql.org/learn/pagination/
  * - Apollo queries & caching: https://www.apollographql.com/docs/react/data/queries
  */
 export default function UserGallery ({ uid, postId: initialPostId, userPublicPage }: UserGalleryProps): JSX.Element | null {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const { status: sessionStatus } = useSession()
   const userProfile = userPublicPage.profile
 
   const { fetchMoreMediaForward } = useMediaCmd()
@@ -55,6 +58,7 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
 
   const authz = usePermissions({ currentUserUuid: userProfile.userUuid })
   const { isAuthorized } = authz
+  const mediaList = relayMediaConnectionToMediaArray(userPublicPage?.media?.mediaConnection)
 
   const baseUrl = `/u/${uid}`
 
@@ -62,23 +66,29 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
     return baseUrl === url
   }, [baseUrl])
 
-  router.beforePopState((e) => {
-    if (isBase(e.as)) {
-      setSlideNumber(-1)
-      return true
+  useEffect(() => {
+    const handlePopState = (): void => {
+      if (isBase(pathname)) {
+        setSlideNumber(-1)
+      }
     }
 
-    return true
-  })
+    window.addEventListener('popstate', handlePopState)
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [isBase, pathname])
 
   const mediaConnection = useUserGalleryStore((state) => state.mediaConnection)
   const resetData = useUserGalleryStore((state) => state.reset)
   const appendMore = useUserGalleryStore((state) => state.append)
 
   /**
-   * Initialize image data store
-   */
+  * Initialize image data store
+  */
   useEffect(() => {
+    if (sessionStatus === 'loading') return // Wait for session data to load
+
     if (isAuthorized) {
       void fetchMoreMediaForward({
         userUuid: userPublicPage.profile.userUuid
@@ -88,7 +98,7 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
     } else {
       resetData(userPublicPage.media.mediaConnection)
     }
-  }, [userPublicPage.media.mediaConnection])
+  }, [userPublicPage.media.mediaConnection, sessionStatus])
 
   const imageList = mediaConnection.edges.map(edge => edge.node)
 
@@ -103,8 +113,8 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
     }
 
     // Handle browser forward/back button
-    if (router.asPath.length > baseUrl.length && selectedMediaId === -1) {
-      const newPostId = basename(router.asPath)
+    if (pathname.length > baseUrl.length && selectedMediaId === -1) {
+      const newPostId = basename(pathname)
       const found = imageList?.findIndex(entry => basename(entry.mediaUrl) === newPostId)
       if (found !== -1) {
         setSlideNumber(found)
@@ -118,18 +128,20 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
   }, [imageList])
 
   const slideViewerCloseHandler = useCallback(() => {
-    router.back()
+    router.push(baseUrl)
     setSlideNumber(-1)
   }, [])
 
   const navigateHandler = (newIndex: number): void => {
     const currentImage = imageList[newIndex]
-    const pathname = `${baseUrl}/${basename(currentImage.mediaUrl)}`
+    const imagePathname = `${baseUrl}/${basename(currentImage.mediaUrl)}`
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('gallery', 'true')
 
     if (selectedMediaId === -1 && newIndex !== selectedMediaId) {
-      void router.push({ pathname, query: { gallery: true } }, pathname, { shallow: true })
+      window.history.pushState({}, '', `${imagePathname}?${params.toString()}`)
     } else {
-      void router.replace({ pathname, query: { gallery: true } }, pathname, { shallow: true })
+      window.history.replaceState({}, '', `${imagePathname}?${params.toString()}`)
     }
 
     setSlideNumber(newIndex)
@@ -159,8 +171,31 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
     ? [...Array(3 - mediaConnection.edges.length).keys()]
     : []
 
+  if (sessionStatus === 'loading') {
+    return <div>Loading...</div>
+  }
+
   return (
     <>
+      {isAuthorized && (
+        <div className='flex justify-center mt-8 text-secondary text-sm whitespace-normal px-4 lg:px-0'>
+          <div className='border rounded-md px-6 py-2 shadow'>
+            <ul className='list-disc'>
+              <li>
+                Please upload 3 photos to complete your profile{' '}
+                {mediaList?.length >= 3 && <span>&#10004;</span>}
+              </li>
+              <li>Upload only your own photos</li>
+              <li>
+                Keep it <b>Safe For Work</b> and climbing-related
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <hr className='mt-8' />
+
       <InfiniteScroll
         dataLength={mediaConnection.edges.length}
         next={fetchMoreData}
@@ -194,13 +229,9 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
                   isAuthorized={isAuthorized}
                 />
                 <div
-                  className={
-                      clx(
-                        !isAuthorized && entityTags.length === 0
-                          ? 'hidden'
-                          : 'absolute inset-x-0 bottom-0 p-2 flex items-center bg-base-100 bg-opacity-60'
-                      )
-                      }
+                  className={clx(
+                    !isAuthorized && entityTags.length === 0 ? 'hidden' : 'absolute inset-x-0 bottom-0 p-2 flex items-center bg-base-100 bg-opacity-60'
+                  )}
                 >
                   <TagList
                     key={key}
@@ -227,9 +258,14 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
                     />}
           onClose={slideViewerCloseHandler}
           auth={authz}
-          baseUrl={baseUrl}
           onNavigate={navigateHandler}
         />}
+
+      {!isAuthorized && (
+        <div className='mt-4 w-full mx-auto text-xs text-base-content text-center'>
+          All photos are copyrighted by their respective owners. All Rights Reserved.
+        </div>
+      )}
     </>
   )
 }
