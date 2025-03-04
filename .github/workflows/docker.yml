@@ -9,7 +9,6 @@ jobs:
   # build docker image and push to registry
   docker:
     runs-on: ubuntu-22.04
-    needs: build
     environment: production
 
     env:
