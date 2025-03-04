@@ -1,4 +1,5 @@
 module.exports = {
+  output: 'standalone',
   images: {
     loader: 'custom',
     loaderFile: './src/image-loader.js'
@@ -20,6 +21,28 @@ module.exports = {
     })
     fileLoaderRule.exclude = /\.svg$/i
     return config
+  },
+  async headers () {
+    return [
+      {
+        source: '/area/:id*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=600'
+          }
+        ]
+      },
+      {
+        source: '/climb/:id*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=2592000, stale-while-revalidate=600'
+          }
+        ]
+      }
+    ]
   },
   async rewrites () {
     return [
