@@ -14,6 +14,7 @@ export const FRAGMENT_CLIMB_DISCIPLINES = gql`
     vscale
     yds
     uiaa
+    wi
   }`
 
 export const FRAGMENT_CLIMB_TYPES = gql`

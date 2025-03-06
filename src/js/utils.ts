@@ -130,11 +130,11 @@ export const debounced = debouncePromise(async (items: object[]): Promise<object
  * @param {ClimbDisciplineRecord} types
  * @returns {ClimbDiscipline[]}
  */
-export function getDisciplineList (type: ClimbDisciplineRecord): ClimbDiscipline[] {
+export function getDisciplineList (type: Partial<ClimbDisciplineRecord>): ClimbDiscipline[] {
   const set: ClimbDiscipline[] = []
   for (const discipline of Object.keys(type) as ClimbDiscipline[]) {
     // stricter assertion so we don't include __typename
-    if (type[discipline]) {
+    if (type[discipline] === true) {
       set.push(discipline)
     }
   }

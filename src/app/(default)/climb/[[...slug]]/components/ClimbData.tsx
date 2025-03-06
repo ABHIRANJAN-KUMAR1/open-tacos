@@ -28,7 +28,7 @@ export const ClimbData: React.FC<ClimbType & Pick<AreaType, 'gradeContext'> & { 
           {gradeStr != null && (
             <RouteGradeChip gradeStr={gradeStr} safety={safety} />
           )}
-          <RouteTypeChips types={getDisciplineList(type)} />
+          <RouteTypeChips types={getDisciplineList(sanitizedDisciplines)} />
         </div>
 
         {length !== -1 && (
