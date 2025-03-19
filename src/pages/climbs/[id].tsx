@@ -25,7 +25,7 @@ import { ClientSideFormSaveAction, Skeleton as ContentSkeleton } from '../../com
 import { ArticleLastUpdate } from '../../components/edit/ArticleLastUpdate'
 import { TradSportGradeInput, BoulderingGradeInput } from '../../components/edit/form/GradeTextInput'
 import Grade from '../../js/grades/Grade'
-import { removeTypenameFromDisciplines } from '../../js/utils'
+import { getDisciplineList, removeTypenameFromDisciplines } from '../../js/utils'
 import { TotalLengthInput } from '../../components/edit/form/TotalLengthInput'
 import { LegacyFAInput } from '../../components/edit/form/LegacyFAInput'
 import { getClimbById } from '../../js/graphql/api'
@@ -411,7 +411,7 @@ const ClimbData: React.FC<{
           {!editMode && cache.gradeStr != null && (
             <RouteGradeChip gradeStr={cache.gradeStr} safety={safety} />
           )}
-          {!editMode && <RouteTypeChips type={disciplinesField} />}
+          {!editMode && <RouteTypeChips types={getDisciplineList(disciplinesField)} />}
         </div>
 
         {length !== -1 && !editMode && (
