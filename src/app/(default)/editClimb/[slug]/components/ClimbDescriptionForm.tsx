@@ -2,20 +2,15 @@
 import { useSession } from 'next-auth/react'
 
 import { SingleEntryForm } from '@/app/(default)/components/AreaAndClimb/SingleEntryForm'
-import { AREA_DESCRIPTION_FORM_VALIDATION_RULES } from '@/components/edit/EditAreaForm'
-import useUpdateAreasCmd from '@/js/hooks/useUpdateAreasCmd'
+import { CLIMB_DESCRIPTION_FORM_VALIDATION_RULES } from '../validation'
+import useUpdateClimbsCmd from '@/js/hooks/useUpdateClimbsCmd'
 import { MarkdownTextArea } from '@/components/ui/form/MarkdownTextArea'
 
-/**
- * Area description edit form
- * @param param0
- * @returns
- */
-export const AreaDescriptionForm: React.FC<{ initialValue: string, uuid: string }> = ({ initialValue, uuid }) => {
+export const ClimbDescriptionForm: React.FC<{ initialValue: string, uuid: string, parentId: string }> = ({ initialValue, uuid, parentId }) => {
   const session = useSession({ required: true })
-  const { updateOneAreaCmd } = useUpdateAreasCmd(
+  const { updateClimbCmd } = useUpdateClimbsCmd(
     {
-      areaId: uuid,
+      parentId,
       accessToken: session?.data?.accessToken as string
     }
   )
@@ -26,14 +21,18 @@ export const AreaDescriptionForm: React.FC<{ initialValue: string, uuid: string 
       helperText='You can use markdown syntax: **bold** *italic* [link](https://example.com).'
       initialValues={{ description: initialValue }}
       submitHandler={async ({ description }) => {
-        await updateOneAreaCmd({ description })
+        const input = {
+          parentId,
+          changes: [{ id: uuid, description }]
+        }
+        await updateClimbCmd(input)
       }}
     >
       <MarkdownTextArea
         initialValue={initialValue}
         name='description'
-        label='Describe this area to the best of your knowledge.  Do not copy descriptions from guidebooks.'
-        rules={AREA_DESCRIPTION_FORM_VALIDATION_RULES}
+        label='Describe this climb to the best of your knowledge.  Do not copy descriptions from guidebooks.'
+        rules={CLIMB_DESCRIPTION_FORM_VALIDATION_RULES}
       />
     </SingleEntryForm>
   )
