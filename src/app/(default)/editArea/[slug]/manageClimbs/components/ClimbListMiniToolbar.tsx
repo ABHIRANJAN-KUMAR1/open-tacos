@@ -7,6 +7,9 @@ import DeleteAreaAndClimbForm from '@/components/edit/DeleteAreaAndClimbForm'
 
 export const ClimbListMiniToolbar: React.FC<{ parentAreaId: string, climbId: string, climbName: string }> = ({ parentAreaId, climbId, climbName }) => {
   const [isOpen, setOpen] = useState(false)
+  const onSuccessHandler = (): void => {
+    setOpen(false)
+  }
 
   return (
     <div className='flex justify-end mb-2 py-1'>
@@ -23,6 +26,7 @@ export const ClimbListMiniToolbar: React.FC<{ parentAreaId: string, climbId: str
             uuid={climbId}
             parentUuid={parentAreaId}
             isClimb
+            onSuccess={onSuccessHandler}
           />
         </DialogContent>
       </MobileDialog>

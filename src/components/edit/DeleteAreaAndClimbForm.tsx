@@ -2,14 +2,13 @@
 import { useEffect } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import clx from 'classnames'
 import { GraphQLError } from 'graphql'
 import { signIn, useSession } from 'next-auth/react'
 import useUpdateAreasCmd from '../../js/hooks/useUpdateAreasCmd'
 import Input from '../ui/form/Input'
 import useUpdateClimbsCmd from '@/js/hooks/useUpdateClimbsCmd'
 
-export interface DeleteProps {
+interface DeleteFormProps {
   parentUuid: string
   uuid: string
   name: string
@@ -30,7 +29,7 @@ interface HtmlFormProps {
  * @param returnToParentPageAfterDelete true to be redirected to parent area page
  * @param onSuccess Optional callback
  */
-export default function DeleteAreaAndClimbForm ({ uuid, name, parentUuid, returnToParentPageAfterDelete = false, isClimb = false, onSuccess }: DeleteProps): JSX.Element {
+export default function DeleteAreaAndClimbForm ({ uuid, name, parentUuid, returnToParentPageAfterDelete = false, isClimb = false, onSuccess }: DeleteFormProps): JSX.Element {
   const session = useSession()
   const router = useRouter()
 
@@ -53,7 +52,7 @@ export default function DeleteAreaAndClimbForm ({ uuid, name, parentUuid, return
   const { deleteClimbsCmd } = useUpdateClimbsCmd({
     parentId: parentUuid,
     accessToken: session.data?.accessToken as string ?? '',
-    onDeleteCompleted: () => router.refresh()
+    onDeleteCompleted: onSuccessHandler
   })
 
   const { deleteOneAreaCmd } = useUpdateAreasCmd({
@@ -114,13 +113,10 @@ export default function DeleteAreaAndClimbForm ({ uuid, name, parentUuid, return
           className='input input-primary input-bordered input-md'
         />
         <button
-          className={
-            clx('mt-4 btn btn-primary w-full',
-              isSubmitting ? 'loading btn-disabled' : ''
-            )
-          }
+          className='mt-4 btn btn-primary w-full'
+          disabled={isSubmitting}
           type='submit'
-        >Delete
+        >{isSubmitting ? 'Deleting...' : 'Delete'}
         </button>
       </form>
     </FormProvider>

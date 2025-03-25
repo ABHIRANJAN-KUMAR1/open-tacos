@@ -30,7 +30,7 @@ interface UpdateClimbsHookReturn {
  */
 export default function useUpdateClimbsCmd ({ parentId, accessToken = '', onUpdateCompleted, onUpdateError, onDeleteCompleted, onDeleteError }: UpdateClimbsHookProps): UpdateClimbsHookReturn {
   /**
-   * Add/Update Clims API
+   * Add/Update Climbs API
    */
   const [updateClimbsApi] = useMutation<{ updateClimbs: string[] }, { input: UpdateClimbsInput }>(
     MUTATION_UPDATE_CLIMBS, {
