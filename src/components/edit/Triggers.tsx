@@ -9,7 +9,7 @@ import AddAreaForm, { AddAreaFormProps } from './AddChildAreaForm'
 import { toast } from 'react-toastify'
 import Tooltip from '../ui/Tooltip'
 
-export interface DeleteAreaTriggerProps {
+interface DeleteAreaTriggerProps {
   parentUuid: string
   areaUuid: string
   areaName: string
