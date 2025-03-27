@@ -14,6 +14,8 @@ interface TicksIndexPageProps {
   ticks: TickType[]
 }
 
+const INITIAL_COUNT = 20
+
 /**
  * Why create a separate /u2/<userid> ?
  * - The current `/u/<userid/<imageid>` page is a big of a mess due to the way Next handles nested route.
@@ -24,8 +26,6 @@ interface TicksIndexPageProps {
 const Index: NextPage<TicksIndexPageProps> = ({ username, ticks }) => {
   const { isFallback } = useRouter()
   const [showAll, setShowAll] = useState(false)
-
-  const INITIAL_COUNT = 20
 
   return (
     <Layout
@@ -53,16 +53,14 @@ const Index: NextPage<TicksIndexPageProps> = ({ username, ticks }) => {
                       <thead>
                         <tr className='bg-gray-100'>
                           <th className='border p-2 text-left'>Climb</th>
-                          <th className='border p-2 text-left'>Grade</th>
-                          <th className='border p-2 text-left'>Date Climbed</th>
+                          <th className='border p-2 text-left hidden sm:table-cell'>Grade</th>
+                          <th className='border p-2 text-left hidden sm:table-cell'>Date Climbed</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {(showAll ? [...ticks] : ticks.slice(0, INITIAL_COUNT))
-                          .sort((a, b) => new Date(b.dateClimbed).getTime() - new Date(a.dateClimbed).getTime()) // Sort in descending order
-                          .map((tick) => (
-                            <Tick key={tick._id} {...tick} />
-                          ))}
+                        {sortTicks(ticks, showAll).map((tick) => (
+                          <Tick key={tick._id} {...tick} />
+                        ))}
                       </tbody>
                     </table>
 
@@ -85,6 +83,14 @@ const Index: NextPage<TicksIndexPageProps> = ({ username, ticks }) => {
 }
 
 export default Index
+
+const sortTicks = (ticks: TickType[], showAll: boolean): TickType[] => {
+  const sortedTicks = [...ticks].sort(
+    (a, b) => new Date(b.dateClimbed).getTime() - new Date(a.dateClimbed).getTime()
+  )
+
+  return showAll ? sortedTicks : sortedTicks.slice(0, INITIAL_COUNT)
+}
 
 const Tick = (tick: TickType): JSX.Element => {
   const { _id, name, climbId, dateClimbed, grade } = tick
