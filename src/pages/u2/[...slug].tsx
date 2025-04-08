@@ -85,10 +85,7 @@ const Index: NextPage<TicksIndexPageProps> = ({ username, ticks }) => {
 export default Index
 
 const sortTicks = (ticks: TickType[], showAll: boolean): TickType[] => {
-  const sortedTicks = [...ticks].sort(
-    (a, b) => new Date(b.dateClimbed).getTime() - new Date(a.dateClimbed).getTime()
-  )
-
+  const sortedTicks = [...ticks].sort((a, b) => b.dateClimbed - a.dateClimbed)
   return showAll ? sortedTicks : sortedTicks.slice(0, INITIAL_COUNT)
 }
 
