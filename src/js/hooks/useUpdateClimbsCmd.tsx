@@ -4,7 +4,6 @@ import { toast } from 'react-toastify'
 import { graphqlClient } from '../graphql/Client'
 import { MUTATION_UPDATE_CLIMBS, MUTATION_DELETE_CLIMBS, UpdateClimbsInput, DeleteManyClimbsInputType } from '../graphql/gql/contribs'
 import { invalidateAreaPageCache, invalidateClimbPageCache } from '../utils'
-import { legacyInvalidateClimbPageCache } from '../legacyInvalidateClimbPageCache'
 
 type UpdateClimbCmdType = (input: UpdateClimbsInput) => Promise<void>
 type DeleteClimbsCmdType = (idList: string[]) => Promise<number>
@@ -42,7 +41,6 @@ export default function useUpdateClimbsCmd ({ parentId, accessToken = '', onUpda
         const idList = Array.isArray(updateClimbs) ? updateClimbs : []
 
         idList.forEach(climbId => {
-          void legacyInvalidateClimbPageCache(climbId)
           void invalidateClimbPageCache(climbId)
         })
 
