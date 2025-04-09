@@ -16,7 +16,7 @@ interface CragTableProps {
 /** curried redirect, including href in <tr> elements is illegal HTML */
 function goTo (climbId: string) {
   return () => {
-    window.location.href = `/climbs/${climbId}`
+    window.location.href = `/climb/${climbId}`
   }
 }
 
@@ -62,7 +62,7 @@ function ClimbItem (props: { favs: string[], climb: Climb, hideSummary: boolean 
         hover:ring-1 ring-purple-400 rounded-xl transition-colors duration-200
         text-sm sm:text-base hover:shadow-purple-500 hover:shadow w-full
         p-3 border-slate-700 border px-4 md:px-8 flex flex-col'
-      data-href={`/climbs/${metadata.climbId}`}
+      data-href={`/climb/${metadata.climbId}`}
       onClick={goTo(metadata.climbId)}
       title={`First assent: ${fa}`}
     >
