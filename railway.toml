@@ -16,3 +16,6 @@ restartPolicyMaxRetries = 5
 sleepApplication = true
 numReplicas = 1
 limitOverride = { containers = { cpu = 1, memoryBytes = 500000000 } }
+
+[environments.production.deploy]
+numReplicas = 2
