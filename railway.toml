@@ -18,4 +18,4 @@ numReplicas = 1
 limitOverride = { containers = { cpu = 1, memoryBytes = 500000000 } }
 
 [environments.production.deploy]
-numReplicas = 2
+multiRegionConfig = {"us-east4-eqdc4a" = {"numReplicas" = 2}}
