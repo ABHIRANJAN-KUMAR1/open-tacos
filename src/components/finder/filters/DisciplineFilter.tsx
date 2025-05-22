@@ -1,3 +1,5 @@
+'use client'
+
 import FilterPopover from '../../ui/FilterPopover'
 import DisciplineGroup from '../../DisciplineGroup'
 import { actions, cragFiltersStore } from '../../../js/stores/index'

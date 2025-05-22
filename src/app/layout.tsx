@@ -1,5 +1,9 @@
+'use client'
+
 import '@/public/fonts/fonts.css'
 import './global.css'
+
+import { SessionProvider } from 'next-auth/react'
 
 /**
  * Root layout for the not-found page
@@ -12,7 +16,9 @@ export default function RootLayout ({
   return (
     <html lang='en' className='scroll-smooth'>
       <body className='relative'>
-        {children}
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   )
