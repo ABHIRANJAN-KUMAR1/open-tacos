@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { useMediaQuery } from 'react-responsive'
 // import resolveConfig from 'tailwindcss/resolveConfig'

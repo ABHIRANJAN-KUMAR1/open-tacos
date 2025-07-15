@@ -1,5 +1,3 @@
-'use client'
-
 import { Transition } from '@headlessui/react'
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 import cx from 'classnames'

@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useCallback } from 'react'
 import FilterPopover, { MinMax } from '../../ui/FilterPopover'
 import YDSRangeSlider, { YDS_DEFS } from '../../ui/YDSRangeSlider'
