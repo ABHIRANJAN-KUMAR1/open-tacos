@@ -1,39 +1,28 @@
-import { useState, ChangeEventHandler, ChangeEvent, useEffect } from 'react'
-import { NextPage, GetStaticProps } from 'next'
-import Link from 'next/link'
+'use client'
+
+import { useState, useEffect, ChangeEventHandler, ChangeEvent } from 'react'
 import Fuse from 'fuse.js'
 import clx from 'classnames'
-import { useRouter } from 'next/router'
-
+import Link from 'next/link'
 import { CountrySummaryType } from '../../js/types'
-import Layout from '../../components/layout'
-import SeoTags from '../../components/SeoTags'
-import { getAllCountries } from '../../js/graphql/api'
 
 interface AreaPageProps {
   countries: CountrySummaryType[]
 }
 
-const Page: NextPage<AreaPageProps> = (props) => {
-  const router = useRouter()
-  return (
-    <>
-      <SeoTags title='All countries' />
-      <Layout
-        showFooter
-        showFilterBar={false}
-        contentContainerClass='content-default'
-      >
-        {router.isFallback ? <div>Loading...</div> : <Body {...props} />}
-      </Layout>
-    </>
-  )
+interface CountryProps {
+  item: CountrySummaryType
 }
 
-export default Page
+type FuseReturnType = CountryProps[]
 
-const Body = ({ countries }: AreaPageProps): JSX.Element => {
+const ClientBody = ({ countries }: AreaPageProps): JSX.Element => {
   const [filtered, setFilter] = useState<FuseReturnType>([])
+
+  useEffect(() => {
+    setFilter(countries.map((entry) => ({ item: entry })))
+  }, [countries])
+
   return (
     <section className='max-w-lg mx-auto w-full p-4'>
       <h2>All Countries</h2>
@@ -43,10 +32,6 @@ const Body = ({ countries }: AreaPageProps): JSX.Element => {
       <div className='py-8 flex gap-4 flex-wrap'>{filtered.map(Country)}</div>
     </section>
   )
-}
-
-interface CountryProps {
-  item: CountrySummaryType
 }
 
 const Country = ({ item }: CountryProps): JSX.Element => {
@@ -77,7 +62,6 @@ const Country = ({ item }: CountryProps): JSX.Element => {
   )
 }
 
-type FuseReturnType = CountryProps[]
 interface FilterBoxProps {
   countries: CountrySummaryType[]
   onChange: (filteredList: FuseReturnType) => void
@@ -86,6 +70,7 @@ interface FilterBoxProps {
 /**
  * A simple list filter
  */
+
 const FilterBox = ({ countries, onChange }: FilterBoxProps): JSX.Element => {
   const [value, setValue] = useState('')
   const options = {
@@ -96,11 +81,8 @@ const FilterBox = ({ countries, onChange }: FilterBoxProps): JSX.Element => {
   const fuse = new Fuse(countries, options)
 
   useEffect(() => {
-    onChange(reshape()) // show the entire list on initial rendering
-  }, [])
-
-  // transform country list to match the shape of fuse.search()
-  const reshape = (): FuseReturnType => countries.map((entry) => ({ item: entry }))
+    onChange(countries.map((entry) => ({ item: entry }))) // show full list on mount
+  }, [countries, onChange])
 
   const onChangeHandler: ChangeEventHandler<HTMLInputElement> = (
     event: ChangeEvent<HTMLInputElement>
@@ -109,7 +91,7 @@ const FilterBox = ({ countries, onChange }: FilterBoxProps): JSX.Element => {
     setValue(newValue)
 
     if (newValue == null || newValue?.length === 0) {
-      onChange(reshape()) // no filter --> show the whole list
+      onChange(countries.map((entry) => ({ item: entry }))) // no filter --> show the whole list
       return
     }
 
@@ -132,33 +114,4 @@ const FilterBox = ({ countries, onChange }: FilterBoxProps): JSX.Element => {
   )
 }
 
-// This function gets called at build time.
-// Nextjs uses the result to decide which paths will get pre-rendered at build time
-export async function getStaticPaths (): Promise<any> {
-  return {
-    paths: [],
-    fallback: true
-  }
-}
-
-// This also gets called at build time
-// Query graphql api for area by id
-export const getStaticProps: GetStaticProps<AreaPageProps, { slug: string[] }> = async ({ params }) => {
-  // const areaId = params?.slug?.[0] ?? null
-
-  try {
-    const countries = await getAllCountries()
-
-    return {
-      props: {
-        countries
-      },
-      revalidate: 60
-    }
-  } catch (e) {
-    return {
-      notFound: true,
-      revalidate: 10
-    }
-  }
-}
+export default ClientBody

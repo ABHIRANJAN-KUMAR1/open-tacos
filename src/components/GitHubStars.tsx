@@ -1,4 +1,8 @@
-import useSWRImmutable from 'swr/immutable'
+'use client'
+
+// import useSWRImmutable from 'swr/immutable'
+
+import useSWR from '../lib/swr'
 
 import GithubIcon from '../assets/icons/github.inline.svg'
 
@@ -6,7 +10,7 @@ import GithubIcon from '../assets/icons/github.inline.svg'
  * Render GitHub stargazers button
  */
 const GitHubStars: React.FC = () => {
-  const { data } = useSWRImmutable<{ stargazers_count: number }>('https://api.github.com/repos/openbeta/open-tacos', fetcher)
+  const { data } = useSWR<{ stargazers_count: number }>('https://api.github.com/repos/openbeta/open-tacos', fetcher)
 
   return (
     <a className='no-animation transition-none flex items-center border rounded-btn px-2 py-1 text-xs font-light' href='https://github.com/OpenBeta/open-tacos'>
