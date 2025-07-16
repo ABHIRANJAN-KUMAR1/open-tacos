@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useCallback } from 'react'
 import FilterPopover, { MinMax } from '../../ui/FilterPopover'
 import BoulderRangeSlider, { BOULDER_DEFS } from '../../ui/BoulderRangeSlider'

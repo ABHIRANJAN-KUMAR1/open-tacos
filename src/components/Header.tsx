@@ -1,6 +1,5 @@
-'use client'
-
 import React from 'react'
+
 import MobileTabletAppBar from './MobileAppBar'
 import DesktopAppBar from './DesktopAppBar'
 import useResponsive from '../js/hooks/useResponsive'
