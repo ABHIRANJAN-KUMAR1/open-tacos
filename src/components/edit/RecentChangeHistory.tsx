@@ -23,14 +23,14 @@ export default function RecentChangeHistory ({ history }: RecentChangeHistoryPro
   )
 }
 
-interface ChangsetRowProps {
+interface ChangesetRowProps {
   changeset: ChangesetType
 }
 
 /**
  * A card showing individual changeset
  */
-export const ChangesetCard: React.FC<ChangsetRowProps> = ({ changeset }) => {
+export const ChangesetCard: React.FC<ChangesetRowProps> = ({ changeset }) => {
   const { createdAt, editedByUser, operation, changes } = changeset
 
   // @ts-expect-error
@@ -89,7 +89,7 @@ const Header: React.FC<{ userId?: string, opStr: string, createdAt: number }> = 
   )
 }
 
-const ClimbChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
+const ClimbChange = ({ fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
   if (fullDocument.__typename !== DocumentTypeName.Climb) {
     return null
   }
@@ -122,7 +122,7 @@ const ClimbChange = ({ changeId, fullDocument, updateDescription, dbOp }: Change
   )
 }
 
-const AreaChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
+const AreaChange = ({ fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
   if (fullDocument.__typename !== DocumentTypeName.Area) {
     return null
   }
@@ -148,7 +148,7 @@ const AreaChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeT
   )
 }
 
-const OrganizationChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
+const OrganizationChange = ({ fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
   if (fullDocument.__typename !== DocumentTypeName.Organization) {
     return null
   }
