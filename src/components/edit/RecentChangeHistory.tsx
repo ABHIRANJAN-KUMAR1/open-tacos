@@ -23,14 +23,14 @@ export default function RecentChangeHistory ({ history }: RecentChangeHistoryPro
   )
 }
 
-interface ChangsetRowProps {
+interface ChangesetRowProps {
   changeset: ChangesetType
 }
 
 /**
  * A card showing individual changeset
  */
-export const ChangesetCard: React.FC<ChangsetRowProps> = ({ changeset }) => {
+export const ChangesetCard: React.FC<ChangesetRowProps> = ({ changeset }) => {
   const { createdAt, editedByUser, operation, changes } = changeset
 
   // @ts-expect-error
@@ -89,7 +89,7 @@ const Header: React.FC<{ userId?: string, opStr: string, createdAt: number }> = 
   )
 }
 
-const ClimbChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
+const ClimbChange = ({ fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
   if (fullDocument.__typename !== DocumentTypeName.Climb) {
     return null
   }
@@ -122,7 +122,7 @@ const ClimbChange = ({ changeId, fullDocument, updateDescription, dbOp }: Change
   )
 }
 
-const AreaChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
+const AreaChange = ({ fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
   if (fullDocument.__typename !== DocumentTypeName.Area) {
     return null
   }
@@ -148,7 +148,7 @@ const AreaChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeT
   )
 }
 
-const OrganizationChange = ({ changeId, fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
+const OrganizationChange = ({ fullDocument, updateDescription, dbOp }: ChangeType): JSX.Element | null => {
   if (fullDocument.__typename !== DocumentTypeName.Organization) {
     return null
   }
@@ -174,37 +174,52 @@ interface UpdatedFieldsProps {
   fields: string[] | undefined
   doc: any
 }
+
+const excludedPatterns = [
+  /^_change/,
+  /^updatedAt/,
+  /^updatedBy/,
+  /^_deleting/,
+  /children/,
+  /byGrade/,
+  /byDiscipline/,
+  /sub_type/,
+  /buffer/,
+  /position/,
+  /bbox/,
+  /polygon/
+]
+
+const shouldHideField = (field: string): boolean => {
+  return excludedPatterns.some(pattern => pattern.test(field))
+}
+
 const UpdatedFields = ({ fields, doc }: UpdatedFieldsProps): JSX.Element | null => {
   if (fields == null) return null
   return (
-    <div>{fields.map(field => {
-      if (field.startsWith('_change')) return null
-      if (field.startsWith('updatedAt')) return null
-      if (field.startsWith('updatedBy')) return null
-      if (field.startsWith('_deleting')) return null
-      if (field.includes('children')) return null
+    <div>
+      {fields.map(field => {
+        if (shouldHideField(field)) return null
 
-      // single access - doc[attr]
-      if (field in doc) {
-        const value = JSON.stringify(doc[field])
-        return (<div key={field}>{field} -&gt; {value}{field.includes('length') ? 'm' : ''}</div>)
-      }
-
-      // double access - doc[parent][child]
-      if (field.includes('.')) {
-        let [parent, child] = field.split('.')
-        if (parent === 'content' && doc.__typename === DocumentTypeName.Area) {
-          parent = 'areaContent' // I had to alias this in the query bc of the overlap with ClimbType
+        if (field in doc) {
+          const value = JSON.stringify(doc[field])
+          return (<div key={field}>{field} -&gt; {value}{field.includes('length') ? 'm' : ''}</div>)
         }
-        if (parent in doc && child in doc[parent]) {
-          const value = JSON.stringify(doc[parent][child])
-          return (<div key={field}>{child} -&gt; {value}</div>)
-        }
-        return (<div key={field}>{child}</div>)
-      }
 
-      return null
-    })}
+        if (field.includes('.')) {
+          let [parent, child] = field.split('.')
+          if (parent === 'content' && doc.__typename === DocumentTypeName.Area) {
+            parent = 'areaContent'
+          }
+          if (parent in doc && child in doc[parent]) {
+            const value = JSON.stringify(doc[parent][child])
+            return (<div key={field}>{child} -&gt; {value}</div>)
+          }
+          return (<div key={field}>{child}</div>)
+        }
+
+        return null
+      })}
     </div>
   )
 }
