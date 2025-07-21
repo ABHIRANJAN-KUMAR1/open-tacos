@@ -285,6 +285,20 @@
           -80.84290
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "firstName": "Bucky",
+        "githubId": "buckcode16",
+        "favoriteCrag": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.64253221862212, 139.77620050196577
+        ]
+      }
     }
   ]
 }
