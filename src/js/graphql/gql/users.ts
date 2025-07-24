@@ -50,6 +50,7 @@ export const QUERY_GET_USER_PUBLIC_PAGE = gql`
             }
           }
           pageInfo {
+            totalItems
             hasNextPage
           }
         }
@@ -78,9 +79,9 @@ export const QUERY_GET_USER_PUBLIC_PROFILE_BY_UUID = gql`
 export const MUTATION_UPDATE_PROFILE = gql`
   mutation ($username: String, $userUuid: ID!, $email: String, $avatar: String, $displayName: String, $bio: String, $website: String) {
     updateUserProfile(input: {
-      userUuid: $userUuid, 
-      username: $username, 
-      email: $email, 
+      userUuid: $userUuid,
+      username: $username,
+      email: $email,
       avatar: $avatar,
       displayName: $displayName,
       bio: $bio,
