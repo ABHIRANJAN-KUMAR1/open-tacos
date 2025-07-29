@@ -18,7 +18,10 @@ export const withUserAuth = (handler: Next13APIHandler): Next13APIHandler => {
       req.headers.set(PREDEFINED_HEADERS.access_token, session.accessToken)
       return await handler(req)
     } else {
-      return NextResponse.json({ status: 401 })
+      return NextResponse.json(
+        { error: 'Unauthorized - Authentication required' },
+        { status: 401 }
+      )
     }
   }
 }

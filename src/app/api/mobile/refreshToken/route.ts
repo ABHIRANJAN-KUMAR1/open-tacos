@@ -18,7 +18,10 @@ async function postHandler (request: NextRequest): Promise<any> {
       throw new Error('Invalid payload')
     }
   } catch (error) {
-    return NextResponse.json({ error: 'Unexpected error', status: 400 })
+    return NextResponse.json(
+      { error },
+      { status: 400 }
+    )
   }
 
   let response: Auth0.JSONApiResponse<Auth0.TokenSet> | undefined

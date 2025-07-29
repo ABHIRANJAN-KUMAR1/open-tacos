@@ -11,13 +11,22 @@ const postHandler = async (req: NextRequest): Promise<any> => {
   try {
     const filename = getBucketPathFromRequest(req)
     if (filename == null) {
-      return NextResponse.json({ status: 400 })
+      return NextResponse.json(
+        { error: 'Bad Request - Missing filename parameter' },
+        { status: 400 }
+      )
     }
     await deleteMediaFromBucket(filename)
-    return NextResponse.json({ status: 200 })
+    return NextResponse.json(
+      { message: 'Media file deleted successfully' },
+      { status: 200 }
+    )
   } catch (e) {
     console.log('Removing file from media server failed', e)
-    return NextResponse.json({ status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error - Failed to delete media file' },
+      { status: 500 }
+    )
   }
 }
 
