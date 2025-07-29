@@ -196,6 +196,12 @@ export default function UserGallery ({ uid, postId: initialPostId, userPublicPag
 
       <hr className='mt-8' />
 
+      <header className='mb-4 flex items-center justify-between px-4 lg:px-0'>
+        <span className='text-sm text-base-content/60'>
+          {(mediaConnection.pageInfo.totalItems ?? 0).toLocaleString()} Photo{mediaConnection.pageInfo.totalItems === 1 ? '' : 's'}
+        </span>
+      </header>
+
       <InfiniteScroll
         dataLength={mediaConnection.edges.length}
         next={fetchMoreData}

@@ -126,6 +126,7 @@ export const QUERY_USER_MEDIA = gql`
           }
         }
         pageInfo {
+          totalItems
           hasNextPage
         }
       }

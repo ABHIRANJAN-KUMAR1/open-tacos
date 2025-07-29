@@ -24,6 +24,7 @@ const DEFAULT_STATES: UserGalleryState = {
   mediaConnection: {
     edges: [],
     pageInfo: {
+      totalItems: 0,
       hasNextPage: false,
       endCursor: ''
     }

@@ -459,6 +459,7 @@ export interface UserMedia {
 export interface MediaConnection {
   edges: MediaEdge[]
   pageInfo: {
+    totalItems?: number
     hasNextPage: boolean
     endCursor: string
   }
