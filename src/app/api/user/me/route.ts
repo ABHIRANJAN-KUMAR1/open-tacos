@@ -10,7 +10,10 @@ const getHandler = async (req: NextRequest): Promise<any> => {
   const accessToken = req.headers.get(PREDEFINED_HEADERS.access_token)
 
   if (accessToken == null || uuid == null) {
-    return NextResponse.json({ status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 
   try {

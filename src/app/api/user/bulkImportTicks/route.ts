@@ -113,7 +113,10 @@ const postHandler = async (req: NextRequest): Promise<any> => {
 
   if (uuid == null || profileUrl == null || auth0Userid == null) {
     // A bug in our code - shouldn't get here.
-    return NextResponse.json({ status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 
   // fetch data from mountain project here

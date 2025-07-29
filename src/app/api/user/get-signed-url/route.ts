@@ -17,14 +17,20 @@ const getHanlder = async (req: NextRequest): Promise<any> => {
   try {
     const fullFilename = prepareFilenameFromRequest(req)
     if (fullFilename == null) {
-      return NextResponse.json({ status: 400 })
+      return NextResponse.json(
+        { error: 'Bad Request - Missing filename parameter' },
+        { status: 400 }
+      )
     }
     const url = await getSignedUrlForUpload(fullFilename)
 
     return NextResponse.json({ url, fullFilename: '/' + fullFilename })
   } catch (e) {
     console.error('Uploading to media server failed', e)
-    return NextResponse.json({ status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error - Failed to generate signed URL' },
+      { status: 500 }
+    )
   }
 }
 
