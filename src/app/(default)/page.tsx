@@ -8,6 +8,7 @@ import { USAToC } from './components/USAToC'
 import { InternationalToC } from './components/InternationalToC'
 import { Volunteers } from './components/Volunteers'
 import { RecentContributionsMap } from './components/recent/RecentContributionsMap'
+import { ChangesetType } from '@/js/types'
 
 export const revalidate = 3600 // 1 hour
 
@@ -15,7 +16,13 @@ export const revalidate = 3600 // 1 hour
  * Root home page
  */
 export default async function Home (): Promise<any> {
-  const history = await getChangeHistoryServerSide()
+  let history: ChangesetType[] = []
+  try {
+    history = await getChangeHistoryServerSide()
+  } catch (error) {
+    console.error('Failed to fetch change history during build:', error)
+    // Continue with empty history if API is down
+  }
   return (
     <>
       <div className='default-page-margins flex flex-col justify-center w-fit'>

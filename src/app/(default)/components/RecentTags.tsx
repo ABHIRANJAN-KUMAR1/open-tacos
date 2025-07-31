@@ -1,17 +1,24 @@
 import { RecentImageCard } from '@/app/(default)/components/RecentMediaCard'
 import { SectionContainer } from './ui/SectionContainer'
 import { getMediaForFeedSC } from '@/js/graphql/gql/serverApi'
+import { MediaByUsers } from '@/js/types'
 
 /**
  * Horizontal gallery of recent images with tags
  */
 export const RecentTags: React.FC = async () => {
-  const recentTagsByUsers = await getMediaForFeedSC(20, 4)
+  let recentTagsByUsers: MediaByUsers[] = []
+  try {
+    recentTagsByUsers = await getMediaForFeedSC(20, 4)
+  } catch (error) {
+    console.error('Failed to fetch recent tags during build:', error)
+    // Continue with empty data if API is down
+  }
   const testAreaIds = Array.from(new Set((process.env.NEXT_PUBLIC_TEST_AREA_IDS ?? '').split(',')))
   const mediaWithTags = recentTagsByUsers.flatMap(entry => entry.mediaWithTags)
 
   const recentMediaWithTags = mediaWithTags.filter(tag => {
-    return tag.entityTags.some(entityTag => {
+    return tag.entityTags.some((entityTag: any) => {
       return testAreaIds.every(testId => {
         const regex = new RegExp(testId, 'g')
         return !regex.test(entityTag.ancestors)
