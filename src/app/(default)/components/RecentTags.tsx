@@ -1,7 +1,7 @@
 import { RecentImageCard } from '@/app/(default)/components/RecentMediaCard'
 import { SectionContainer } from './ui/SectionContainer'
 import { getMediaForFeedSC } from '@/js/graphql/gql/serverApi'
-import { MediaByUsers } from '@/js/types'
+import { MediaByUsers, EntityTag } from '@/js/types'
 
 /**
  * Horizontal gallery of recent images with tags
@@ -18,7 +18,7 @@ export const RecentTags: React.FC = async () => {
   const mediaWithTags = recentTagsByUsers.flatMap(entry => entry.mediaWithTags)
 
   const recentMediaWithTags = mediaWithTags.filter(tag => {
-    return tag.entityTags.some((entityTag: any) => {
+    return tag.entityTags.some((entityTag: EntityTag) => {
       return testAreaIds.every(testId => {
         const regex = new RegExp(testId, 'g')
         return !regex.test(entityTag.ancestors)
