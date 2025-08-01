@@ -18,7 +18,8 @@ async function postHandler (request: NextRequest): Promise<NextResponse> {
       console.error('Empty username/password!')
       throw new Error('Invalid payload')
     }
-  } catch (error) {
+  } catch (err) {
+    console.error('POST /login error:', err)
     return NextResponse.json({ error: 'Unexpected error' }, { status: 400 })
   }
 
@@ -27,7 +28,7 @@ async function postHandler (request: NextRequest): Promise<NextResponse> {
     response = await auth0Client.oauth.passwordGrant({
       username,
       password,
-      scope: 'openid profile email offline_access',
+      scope: 'offline_access access_token_authz openid email profile read:current_user create:current_user_metadata update:current_user_metadata read:stats update:area_attrs',
       audience: 'https://api.openbeta.io',
       realm: 'Username-Password-Authentication'
     })
