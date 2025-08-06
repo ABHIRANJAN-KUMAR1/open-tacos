@@ -28,6 +28,7 @@ async function postHandler (request: NextRequest): Promise<any> {
   try {
     response = await auth0Client.oauth.refreshTokenGrant({
       refresh_token: refreshToken,
+      scope: 'offline_access access_token_authz openid email profile read:current_user create:current_user_metadata update:current_user_metadata read:stats update:area_attrs',
       audience: 'https://api.openbeta.io'
     })
 
