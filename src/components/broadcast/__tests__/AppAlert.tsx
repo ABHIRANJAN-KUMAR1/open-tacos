@@ -23,47 +23,52 @@ jest.mock('next-auth/react', () => ({
 
 let AppAlertComponent: React.FC<AppAlertProps>
 
-describe('Banner suppression', () => {
+describe('AppAlert', () => {
   beforeAll(async () => {
     // why async import?  see https://github.com/facebook/jest/issues/10025#issuecomment-716789840
     const module = await import('../AppAlert')
     AppAlertComponent = module.AppAlert
   })
 
-  it('doesn\'t show alert when cookie exists', async () => {
-    // cookie exists
-    cookieGetter.mockReturnValueOnce('foo')
+  beforeEach(() => {
+    cookieGetter.mockClear()
+    cookieSetter.mockClear()
+  })
+
+  it('renders alert with message', () => {
     render(
       <AppAlertComponent
+        cookieStorageKey='test'
         message={
           <div>
             important message
           </div>
-      }
-      />)
+        }
+      />
+    )
 
-    expect(screen.queryAllByRole('button').length).toEqual(0)
-    cookieGetter.mockClear()
+    expect(screen.getByText('important message')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Don't show this again/i })).toBeInTheDocument()
   })
 
-  it('shows alert', async () => {
-    // Clear previous cookie setting if any
-    // cookieGetter.mockClear()
-    // cookieGetter.mockRejectedValueOnce(null)
+  it('sets cookie when suppress button is clicked', async () => {
     const user = userEvent.setup({ skipHover: true })
+
     render(
       <AppAlertComponent
+        cookieStorageKey='test'
         message={
           <div>
             important message 2
           </div>
-      }
-      />)
-    screen.debug()
+        }
+      />
+    )
+
     // click the Suppress button
     await user.click(screen.getByRole('button', { name: /Don't show this again/i }))
 
-    // alert dismissed
-    expect(screen.queryAllByRole('button')).toHaveLength(0)
+    // verify cookie was set
+    expect(cookieSetter).toHaveBeenCalledWith('test', '1', { strict: true, expires: 30 })
   })
 })
