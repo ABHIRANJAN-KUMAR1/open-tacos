@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useState } from 'react'
 import { Transition } from '@headlessui/react'
 import { UserCircleIcon, TagIcon } from '@heroicons/react/24/outline'
 import { urlResolver } from '../../js/utils'
@@ -14,7 +15,6 @@ export default function PhotoFooter ({
   hover
 }: PhotoFooterProps): JSX.Element {
   const { username, entityTags } = mediaWithTags
-  const firstTag = entityTags.length > 0 ? entityTags[0] : null
 
   return (
     <Transition
@@ -23,8 +23,8 @@ export default function PhotoFooter ({
       enterFrom='opacity-20'
       enterTo='opacity-100'
     >
-      {firstTag != null && (
-        <DestinationLink {...firstTag} />
+      {entityTags.length > 0 && (
+        <AllTagsLink entityTags={entityTags} />
       )}
       {username != null && <PhotographerLink uid={username} />}
     </Transition>
@@ -40,20 +40,38 @@ const PhotographerLink = ({ uid }: { uid: string }): JSX.Element => (
 )
 
 /**
- * A link to a tag
+ * A component that shows all tags when clicked
  */
-const DestinationLink: React.FC<EntityTag> = ({
-  targetId: id, type, areaName
-}) => {
-  const url = urlResolver(type, id, areaName)
-  if (url == null) return null
+const AllTagsLink: React.FC<{ entityTags: EntityTag[] }> = ({ entityTags }) => {
+  const [showTags, setShowTags] = useState(false)
+
+  const handleClick = (): void => {
+    setShowTags(!showTags)
+  }
+
   return (
-    (
-      <Link href={url}>
-        <span className='absolute bottom-2 left-2 rounded-full bg-gray-100 bg-opacity-70 hover:bg-opacity-100 hover:ring p-2'>
-          <TagIcon className='text-black w-4 h-4' />
-        </span>
-      </Link>
-    )
+    <div className='absolute bottom-2 left-2'>
+      <button
+        onClick={handleClick}
+        className='rounded-full bg-gray-100 bg-opacity-70 hover:bg-opacity-100 hover:ring p-2'
+        aria-label={`Show ${entityTags.length} tags`}
+        title={`Show ${entityTags.length} tags`}
+      >
+        <TagIcon className='text-black w-4 h-4' />
+      </button>
+
+      {showTags && (
+        <div className='absolute bottom-full left-0 mb-2 p-3 bg-white rounded-lg shadow-lg border w-40'>
+          <div className='text-sm font-semibold mb-2'>Tags:</div>
+          <ul className='space-y-1'>
+            {entityTags.map((tag, index) => (
+              <li key={index} className='text-xs'>
+                {tag.climbName ?? tag.areaName ?? 'Untitled'}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   )
 }
