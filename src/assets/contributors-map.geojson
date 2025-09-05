@@ -299,6 +299,21 @@
           35.64253221862212, 139.77620050196577
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "firstName": "Snopan",
+        "githubId": "snopan",
+        "favoriteCrag": "01986bf6-6354-56d4-8f98-601c20fe52b7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.8136,
+          144.9631
+        ]
+      }
     }
   ]
 }
