@@ -10,10 +10,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          0.905152180850496,
-          41.26613040056221
-        ]
+        "coordinates": [0.905152180850496, 41.26613040056221]
       }
     },
     {
@@ -25,10 +22,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -0.892151,
-          39.659768
-        ]
+        "coordinates": [-0.892151, 39.659768]
       }
     },
     {
@@ -40,10 +34,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -115.465404,
-          36.037803
-        ]
+        "coordinates": [-115.465404, 36.037803]
       }
     },
     {
@@ -55,10 +46,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -115.1566,
-          51.047
-        ]
+        "coordinates": [-115.1566, 51.047]
       }
     },
     {
@@ -70,10 +58,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -118.2422725993683,
-          34.05295703301907
-        ]
+        "coordinates": [-118.2422725993683, 34.05295703301907]
       }
     },
     {
@@ -85,10 +70,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -105.324479,
-          39.737812
-        ]
+        "coordinates": [-105.324479, 39.737812]
       }
     },
     {
@@ -100,10 +82,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -118.113606,
-          34.052724
-        ]
+        "coordinates": [-118.113606, 34.052724]
       }
     },
     {
@@ -115,10 +94,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -106.45581804700856,
-          35.200139741452986
-        ]
+        "coordinates": [-106.45581804700856, 35.200139741452986]
       }
     },
     {
@@ -130,10 +106,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -121.31531,
-          44.05817299999998
-        ]
+        "coordinates": [-121.31531, 44.05817299999998]
       }
     },
     {
@@ -145,10 +118,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -111.65141214144266,
-          35.198478054480816
-        ]
+        "coordinates": [-111.65141214144266, 35.198478054480816]
       }
     },
     {
@@ -160,10 +130,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -105.28787643505346,
-          39.98884394309755
-        ]
+        "coordinates": [-105.28787643505346, 39.98884394309755]
       }
     },
     {
@@ -175,10 +142,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -108.73960,
-          42.59040
-        ]
+        "coordinates": [-108.7396, 42.5904]
       }
     },
     {
@@ -190,10 +154,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -123.15394,
-          49.67997
-        ]
+        "coordinates": [-123.15394, 49.67997]
       }
     },
     {
@@ -205,10 +166,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -71.88538,
-          42.49094
-        ]
+        "coordinates": [-71.88538, 42.49094]
       }
     },
     {
@@ -220,55 +178,43 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -85.40108,
-          35.07379
-        ]
+        "coordinates": [-85.40108, 35.07379]
       }
     },
     {
       "type": "Feature",
-      "properties": { 
+      "properties": {
         "firstName": "Michael",
         "githubId": "mikeschen",
         "favoriteCrag": "a6aebb1a-6568-55b6-92be-23d7138f50d4"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -112.0740,
-          33.4484
-        ]
+        "coordinates": [-112.074, 33.4484]
       }
     },
     {
       "type": "Feature",
-      "properties": { 
+      "properties": {
         "firstName": "Aaron",
         "githubId": "glassbead0",
         "favoriteCrag": "3a78382f-105b-5e34-bc57-75bfccff73d5"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -105.003132,
-          39.7243542
-        ]
+        "coordinates": [-105.003132, 39.7243542]
       }
-    }, 
+    },
     {
       "type": "Feature",
-      "properties": { 
+      "properties": {
         "firstName": "Quinault",
         "githubId": "quinaltdelete",
         "favoriteCrag": "f9eeab04-e846-526b-911f-efd7ae2124dc"
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          -118.570223,
-          37.314980 
-        ]
+        "coordinates": [-118.570223, 37.31498]
       }
     },
     {
@@ -280,10 +226,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          38.24195,
-          -80.84290
-        ]
+        "coordinates": [38.24195, -80.8429]
       }
     },
     {
@@ -295,9 +238,7 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          35.64253221862212, 139.77620050196577
-        ]
+        "coordinates": [35.64253221862212, 139.77620050196577]
       }
     },
     {
@@ -309,10 +250,19 @@
       },
       "geometry": {
         "type": "Point",
-        "coordinates": [
-          37.8136,
-          144.9631
-        ]
+        "coordinates": [37.8136, 144.9631]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "firstName": "Susanne",
+        "githubId": "justArale",
+        "favoriteCrag": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [13.405, 52.52]
       }
     }
   ]
