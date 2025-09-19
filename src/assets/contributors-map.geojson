@@ -314,6 +314,21 @@
           144.9631
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "firstName": "Susanne",
+        "githubId": "justArale",
+        "favoriteCrag": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.405,
+          52.52
+        ]
+      }
     }
   ]
 }
