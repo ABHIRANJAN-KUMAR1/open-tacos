@@ -184,7 +184,7 @@ export default ActivityHeat
 
 const getYearFromTick = (tick: TickType): number => new Date(tick.dateClimbed).getFullYear()
 
-const getWeekNumberFromTick = (tick: TickType): number => getWeek(tick.dateClimbed)
+const getWeekNumberFromTick = (tick: TickType): number => getWeek(tick.dateClimbed, { weekStartsOn: 1 })
 
 const getDayOfWeekFromTick = (tick: TickType): number => (new Date(tick.dateClimbed)).getDay()
 
