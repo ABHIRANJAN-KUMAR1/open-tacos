@@ -329,6 +329,21 @@
           52.52
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "firstName": "Tri",
+        "githubId": "tri97nguyen",
+        "favoriteCrag": "a291d1d8-8f03-5991-bd12-b6d9de7bd0b5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.19823213875873,
+          -73.13183477801395
+        ]
+      }
     }
   ]
 }
