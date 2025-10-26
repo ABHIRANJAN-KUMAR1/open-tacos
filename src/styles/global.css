@@ -4,3 +4,11 @@
     
 @import './algolia.css';
 @import './defaults.css';
+
+:root {
+  --primary-color: #1E90FF;    
+  --secondary-color: #FFD700;  
+  --accent-color: #FF4500;     
+  --background-color: #F5F5F5; 
+  --text-color: #333333;      
+}

@@ -1,4 +1,4 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
+// const defaultTheme = require('tailwindcss/defaultTheme')
 
 // See https://tailwindcss.com/docs/configuration for details
 module.exports = {
@@ -12,9 +12,18 @@ module.exports = {
   plugins: [require('@tailwindcss/typography'), require('daisyui'), require('tailwindcss-radix')()],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['ISO', ...defaultTheme.fontFamily.sans]
+      fontSize: {
+        xs: '0.75rem', // default chhota
+        sm: '0.875rem', // thoda bada
+        base: '1rem', // normal
+        lg: '1.125rem', // thoda bada
+        xl: '1.25rem', // aur bada
+        '2xl': '1.5rem', // heading ke liye
+        'table-sm': '0.875rem',
+        'table-md': '1rem',
+        'table-lg': '1.125rem'
       },
+
       colors: {
         'custom-green': '#8BB191',
         'ob-primary': '#F15E40',

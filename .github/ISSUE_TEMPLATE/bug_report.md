@@ -18,3 +18,6 @@
 
 ## Operating system
 <--- Example:  MacOS 13.2.1 -->
+
+## Describe your issue clearly
+> Please include screenshots if relevant.
