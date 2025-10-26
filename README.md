@@ -262,3 +262,4 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 ## License
 
 AGPL
+> Note: Make sure to run `yarn install` before starting the dev server.
