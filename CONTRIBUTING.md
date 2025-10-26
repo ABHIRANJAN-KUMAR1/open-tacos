@@ -57,6 +57,8 @@ This guide was adapted from project [Atom's](https://github.com/atom/atom)
 
 OpenBeta is a volunteer effort. We encourage you to pitch in and join the team!
 
+> Note: Before submitting a pull request, make sure your branch is up to date with the latest `main` branch.
+
 Thanks! ❤️ ❤️ ❤️
 
 OpenBeta Team
