@@ -357,3 +357,28 @@ export const parseUuidAsFirstParam = ({ params }: PageWithCatchAllUuidProps): st
   }
   return uuid
 }
+
+/**
+ * Beta content marker utilities.
+ * We store a small, visible marker at the start of a climb description when
+ * an editor marks it as beta. This avoids needing backend schema changes while
+ * still letting the frontend hide beta content by default.
+ */
+export const BETA_MARKER = '[[BETA]]'
+
+export const descriptionHasBetaMarker = (d: string | null | undefined): boolean => {
+  if (typeof d !== 'string') return false
+  return d.trim().startsWith(BETA_MARKER)
+}
+
+export const addBetaMarkerToDescription = (d: string | null | undefined): string => {
+  const val = d ?? ''
+  if (descriptionHasBetaMarker(val)) return val
+  return `${BETA_MARKER}\n\n${val}`
+}
+
+export const removeBetaMarkerFromDescription = (d: string | null | undefined): string => {
+  if (typeof d !== 'string') return ''
+  if (!descriptionHasBetaMarker(d)) return d
+  return d.trim().substring(BETA_MARKER.length).trimStart()
+}
