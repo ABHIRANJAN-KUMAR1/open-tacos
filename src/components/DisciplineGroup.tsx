@@ -6,51 +6,25 @@ import Toggle from './ui/Toggle'
 interface DisciplineGroupProps {
   defaultTypes: Partial<ClimbDisciplineRecord>
   climbTypes: Partial<ClimbDisciplineRecord>
-  setClimbTypes: Function
+  setClimbTypes: React.Dispatch<React.SetStateAction<Partial<ClimbDisciplineRecord>>>
 }
 
 const DisciplineGroup = ({ climbTypes, setClimbTypes, defaultTypes }: DisciplineGroupProps): JSX.Element => {
-  useEffect(() => { // if doesn't match, set everything to default
-    if (JSON.stringify(climbTypes) !== JSON.stringify(defaultTypes)) {
-      setClimbTypes({ ...defaultTypes })
-    }
-  }, [])
+  useEffect(() => {
+    // Merge defaults without overwriting user selections
+    setClimbTypes(prev => ({ ...defaultTypes, ...prev }))
+  }, [defaultTypes, setClimbTypes])
+
+  const toggleType = (key: keyof ClimbDisciplineRecord) => {
+    setClimbTypes(prev => ({ ...prev, [key]: !prev[key] }))
+  }
 
   return (
     <TableView divider>
-      <Toggle
-        label='Sport'
-        checked={climbTypes.sport ?? false}
-        onClick={() => {
-          // eslint-disable-next-line
-         setClimbTypes({ ...climbTypes, sport: !climbTypes.sport })
-        }}
-      />
-
-      <Toggle
-        checked={climbTypes.trad ?? false}
-        label='Trad'
-        onClick={() => {
-          // eslint-disable-next-line
-          setClimbTypes({ ...climbTypes, trad: !climbTypes.trad })
-        }}
-      />
-      <Toggle
-        checked={climbTypes.tr ?? false}
-        label='Top rope'
-        onClick={() => {
-          // eslint-disable-next-line
-          setClimbTypes({ ...climbTypes, tr: !climbTypes.tr })
-        }}
-      />
-      <Toggle
-        checked={climbTypes.bouldering ?? false}
-        label='Bouldering'
-        onClick={() => {
-          // eslint-disable-next-line
-          setClimbTypes({ ...climbTypes, bouldering: !climbTypes.bouldering })
-        }}
-      />
+      <Toggle label="Sport" checked={climbTypes.sport ?? false} onClick={() => toggleType('sport')} />
+      <Toggle label="Trad" checked={climbTypes.trad ?? false} onClick={() => toggleType('trad')} />
+      <Toggle label="Top rope" checked={climbTypes.tr ?? false} onClick={() => toggleType('tr')} />
+      <Toggle label="Bouldering" checked={climbTypes.bouldering ?? false} onClick={() => toggleType('bouldering')} />
     </TableView>
   )
 }
