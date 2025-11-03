@@ -1,170 +1,212 @@
-/* XSearch */
-
+/* ===================================
+   GLOBAL VARIABLES
+=================================== */
 body {
-  --aa-search-input-height: 100%;
+  --aa-search-input-height: 2.5rem; /* fixed input height for consistency */
 }
 
-/* Undo defaults set in the theme */
-.aa-Panel button {
-  border: 1px solid !important;
-  @apply btn rounded-full btn-sm btn-outline text-xs !important;
-}
-
-.xsearch-inputWrapperPrefix {
-  @apply text-white m-0.5 xl:m-1 flex items-center justify-center bg-ob-primary rounded-full h-8 w-8 xl:h-10 xl:w-10 !important;
-}
-
-.aa-LoadingIndicator {
-  @apply stroke-white h-auto w-auto p-0 !important;
-}
-
-.aa-SubmitIcon {
-  @apply m-auto  !important;
-}
-
-.aa-LoadingIcon {
-  @apply text-white !important;
-}
-
-.aa-Label {
-  @apply h-auto mt-1 !important;
-}
-
-.xsearch-mobile-trigger-btn {
-  @apply w-8 h-8 !important;
-}
-
-.xsearch-trigger-btn {
-  @apply p-1 ring-0 border-none rounded-full !important;
-}
-
-.xsearch-trigger-btn-icon {
-  @apply w-7 h-7 bg-ob-primary rounded-full text-white !important;
-}
-
-.xsearch-trigger-btn-icon .aa-SubmitIcon {
-  @apply w-4 h-4 !important;
-}
-
-.xsearch-detachedSearchButtonPlaceholder {
-  @apply ml-2 text-sm text-base-300 !important;
-}
-
-.xsearch-submitButton {
-  @apply p-0 !important;
-}
-
-.xsearch-submitButton .aa-SubmitIcon {
-  @apply w-6 h-6 text-white !important;
-}
-
-.xsearch-inputWrapper {
-  @apply pl-3 !important;
-}
-
-.name-search-item[aria-selected="true"] {
-  @apply bg-white !important;
-}
-
-.crag-finder-item[aria-selected="true"] {
-  @apply bg-slate-100 !important;
+/* ===================================
+   XSEARCH - MAIN SEARCH COMPONENT
+=================================== */
+.xsearch {
+  @apply w-full max-w-xl relative;
 }
 
 .xsearch-form {
-  @apply ring-0 bg-white border-none overflow-hidden rounded-full !important;
+  @apply ring-0 bg-white border-none overflow-hidden rounded-full flex items-center;
 }
 
-.xsearch-sourceHeader {
+.xsearch-inputWrapper {
+  @apply pl-3 h-10 flex items-center w-full;
 }
 
-.xsearch {
-  @apply w-full max-w-xl !important;
+.xsearch-inputWrapperPrefix {
+  @apply text-white m-1 flex items-center justify-center bg-ob-primary rounded-full h-10 w-10;
+}
+
+.xsearch-trigger-btn {
+  @apply p-1 border-none ring-0 rounded-full;
+}
+
+.xsearch-trigger-btn-icon {
+  @apply w-7 h-7 bg-ob-primary rounded-full text-white flex items-center justify-center;
+}
+
+.xsearch-trigger-btn-icon .aa-SubmitIcon {
+  @apply w-4 h-4;
+}
+
+.xsearch-submitButton {
+  @apply p-0;
+}
+
+.xsearch-submitButton .aa-SubmitIcon {
+  @apply w-6 h-6 text-white;
+}
+
+.aa-LoadingIcon {
+  @apply text-white;
+}
+
+.aa-LoadingIndicator {
+  @apply stroke-white h-auto w-auto p-0;
+}
+
+.name-search-item[aria-selected="true"] {
+  @apply bg-white;
+}
+
+.crag-finder-item[aria-selected="true"] {
+  @apply bg-slate-100;
 }
 
 .xsearch-detachedFormContainer {
-  @apply flex items-center !important;
+  @apply flex items-center;
 }
-/* End of XSearch */
 
-/* Climb search for tagging */
+.xsearch-detachedSearchButtonPlaceholder {
+  @apply ml-2 text-sm text-base-300;
+}
 
+/* ===================================
+   CLIMB TAG SEARCH
+=================================== */
 .climb-tag-search {
-  @apply z-50 w-80 !important;
+  @apply z-50 w-full max-w-xs md:w-80;
 }
 
 .aa-Form.tag-search-form {
-  @apply p-0.5 w-full ring-1  border-0 ring-black rounded-md shadow-gray-500 !important;
+  @apply p-1 w-full ring-1 ring-black rounded-md shadow-md;
 }
 
 .tag-search-inputWrapper {
-  @apply text-sm !important;
+  @apply text-sm;
 }
 
 .tag-search-inputWrapperPrefix {
-  @apply flex items-center justify-center w-8 h-8 !important;
+  @apply flex items-center justify-center w-8 h-8;
 }
 
 .tag-search-submit-button {
-  @apply bg-inherit p-0 h-auto w-auto !important;
+  @apply bg-inherit p-0 h-auto w-auto;
 }
 
 .tag-search-submit-button .aa-SubmitIcon {
-  @apply text-black stroke-2 stroke-black w-4 h-4 !important;
+  @apply text-black w-4 h-4 stroke-2;
 }
 
 .tag-search-panel {
-  /* Result panel - Tablet and desktop only. We need a mobile specific width and layout */
-  @apply mt-0.5 pt-0 rounded-lg border border-gray-600 drop-shadow-lg max-w-screen-sm !important;
+  @apply mt-1 pt-0 rounded-lg border border-gray-600 drop-shadow-lg w-full max-w-screen-sm md:max-w-md;
 }
 
 .tag-search-item {
-  @apply m-1 px-2 rounded-md hover:bg-ob-secondary hover:bg-opacity-20 !important;
+  @apply m-1 px-2 rounded-md hover:bg-ob-secondary hover:bg-opacity-20;
 }
-/* End of search for tagging */
 
-/* For Town, city, country search */
-
+/* ===================================
+   MOBILE / DEFAULT SEARCH
+=================================== */
 .aa-default-mobile-trigger-btn {
-  @apply overflow-hidden input input-bordered input-primary input-md text-ellipsis !important;
+  @apply w-full overflow-hidden input input-bordered input-primary input-md text-ellipsis;
 }
 
 .aa-default-mobile-trigger-btn-icon {
-  @apply -ml-3.5 stroke-gray-400 stroke-2 !important;
+  @apply -ml-3.5 stroke-gray-400 stroke-2;
 }
 
 .aa-default-mobile-submit-button .aa-SubmitIcon {
-  @apply text-black stroke-2 stroke-black w-5 h-5 !important;
+  @apply text-black stroke-2 w-5 h-5;
 }
 
 .aa-default-mobile-form {
-  @apply rounded border-0 ring-0 !important;
+  @apply rounded border-0 ring-0 w-full;
 }
 
 .aa-default-mobile-cancel-button {
-  @apply btn btn-primary btn-sm !important;
+  @apply btn btn-primary btn-sm;
 }
 
 .aa-default-mobile-item {
-  @apply p-4 !important;
+  @apply p-4;
 }
+
 .aa-default-mobile-item[aria-selected="true"] {
-  @apply bg-base-200 bg-opacity-50 rounded-none !important;
+  @apply bg-base-200 bg-opacity-50 rounded-none;
 }
 
 .aa-default-mobile-placeholder {
-  @apply text-base-content !important;
+  @apply text-base-content;
 }
 
-/**
-
-**/
+/* ===================================
+   RESPONSIVE / HIDDEN ELEMENTS
+=================================== */
 .aa-hidden-mobile-trigger-btn {
-  @apply hidden !important;
+  @apply hidden md:block;
 }
 
 .aa-custom-mobile-placeholder {
-  @apply text-white !important;
+  @apply text-white;
 }
+
 .aa-custom-mobile-trigger-btn-icon {
-  @apply hidden !important;
+  @apply hidden;
+}
+
+/* ===================================
+   DROPDOWN PANELS RESPONSIVE
+=================================== */
+.aa-Panel {
+  @apply w-full max-w-screen-sm md:max-w-md rounded-lg border border-gray-300 shadow-lg bg-white z-50 absolute top-full left-0 mt-2;
+}
+
+.aa-Panel ul {
+  @apply max-h-60 overflow-auto;
+}
+
+.aa-Panel li {
+  @apply px-3 py-2 cursor-pointer hover:bg-gray-100;
+}
+
+.aa-Panel li[aria-selected="true"] {
+  @apply bg-gray-200 font-semibold;
+}
+
+/* ===================================
+   FLOATING SEARCH BAR (MOBILE)
+=================================== */
+@media (max-width: 768px) {
+  .xsearch-floating {
+    @apply fixed top-0 left-0 w-full bg-white shadow-md z-50 p-2 flex items-center space-x-2;
+  }
+
+  .xsearch-floating input {
+    @apply flex-1 border border-gray-300 rounded-full px-3 py-2;
+  }
+
+  .xsearch-floating .xsearch-submitButton {
+    @apply p-2;
+  }
+
+  .xsearch-floating .aa-Panel {
+    @apply absolute top-full mt-2 left-0 w-full max-h-80 overflow-auto;
+  }
+}
+
+/* ===================================
+   MISC / UTILITY
+=================================== */
+.aa-Label {
+  @apply h-auto mt-1;
+}
+
+.xsearch-sourceHeader {
+  /* empty placeholder for future styling */
+}
+
+/* Hover effects for buttons */
+.xsearch-trigger-btn:hover,
+.tag-search-submit-button:hover,
+.aa-default-mobile-submit-button:hover {
+  @apply opacity-90;
 }
