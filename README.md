@@ -3,61 +3,74 @@
     <img alt="OpenBeta logo" src="public/openbeta-logo-192x192.png" width="60" />
   </a>
 </p>
+
 <h1 align="center">
   OpenBeta v0.9
 </h1>
+
 <p align="center">
-  <strong>
-    Open source. Rock climbing.  Catalog.
-  </strong>
+  <strong>Open source. Rock climbing. Catalog.</strong>
 </p>
 
 <p align="center">
   We're building a <i>free</i> and <i>open source</i> rock climbing catalog.
-</p
+</p>
+
+<h2 align="center">
+  <a href="https://openbeta.io">Take me to the site 🚀</a>
+</h2>
 
 <p align="center">
-  <h2 align="center">
-    <a href="https://openbeta.io">Take me to the site</a> 🚀
-  </h2>
+  The project is currently in the MVP stage.<br>
+  <b>We'd love to hear your feedback!</b><br>
+  Chat with the dev team on <a href="https://discord.gg/ptpnWWNkJx">Discord</a>.
 </p>
 
 <p align="center">
-The project is currently in MVP stage.<br>
-<b>We'd love to hear your feedback.</b>  Chat with the dev team on <a href="https://discord.gg/ptpnWWNkJx">Discord</a>.
-</p>
-
-<p align="center">
-  <a href="https://github.com/OpenBeta/open-tacos/actions/workflows/nodejs.yml?query=branch%3Adevelop"><img src="https://github.com/openbeta/open-tacos/actions/workflows/nodejs.yml/badge.svg?branch=develop" alt="Develop branch"/>
+  <a href="https://github.com/OpenBeta/open-tacos/actions/workflows/nodejs.yml?query=branch%3Adevelop">
+    <img src="https://github.com/openbeta/open-tacos/actions/workflows/nodejs.yml/badge.svg?branch=develop" alt="Develop branch" />
   </a>
   &nbsp;
-  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/github/license/openbeta/open-tacos?style=flat-square"/></a>
+  <a href="./LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/openbeta/open-tacos?style=flat-square" />
+  </a>
 </p>
 
-## Screenshot
+---
 
-### Climb page
-<img alt="OpenBeta screenshot" src="./openbeta-v0.7-screenshot.png"/>
+## 🖼️ Screenshot
 
-### Personal performance history
-<img alt="OpenBeta screenshot" src="./climb-history-chart.png"/>
+### 🧗 Climb Page
+<img alt="OpenBeta Climb Page Screenshot" src="./openbeta-v0.7-screenshot.png" width="600"/>
 
-## Tech stack
+### 📊 Personal Performance History
+<img alt="OpenBeta Performance Chart" src="./climb-history-chart.png" width="600"/>
 
-1. Backend GraphQL API ([openbeta-graphql](https://github.com/OpenBeta/openbeta-graphql)): Apollo GraphQL, MongoDB, Node.js.
+---
 
-2. Frontend (this repo): React.js, Next.js, TailwindCSS.
+## ⚙️ Tech Stack
+
+1. **Backend GraphQL API** — [openbeta-graphql](https://github.com/OpenBeta/openbeta-graphql):  
+   Built with **Apollo GraphQL**, **MongoDB**, and **Node.js**.
+
+2. **Frontend (this repo)** — Built with **React.js**, **Next.js**, and **TailwindCSS**.
+
+---
+
 
 ### High level architecture
 ![Architecture overview](./ob-arch-v0.9.png)
 
+---
 
 ## Live instances
 
-| Env     | Link                          | Branch  | Content | Build                                                                                                                                                                                                                                     |
-|---------|-------------------------------|---------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Prod    | https://openbeta.io     | develop | Complete DB    | <a href="https://github.com/OpenBeta/open-tacos/actions/workflows/nodejs.yml?query=branch%3Adevelop"><img src="https://github.com/openbeta/open-tacos/actions/workflows/nodejs.yml/badge.svg?branch=develop" alt="Develop branch"/> |
-| Staging | https://stg.openbeta.io | develop | Partial | |
+| Env     | Link                   | Branch  | Content      | Build |
+|----------|------------------------|----------|---------------|--------|
+| Prod     | https://openbeta.io    | develop  | Complete DB   | <a href="https://github.com/OpenBeta/open-tacos/actions/workflows/nodejs.yml?query=branch%3Adevelop"><img src="https://github.com/openbeta/open-tacos/actions/workflows/nodejs.yml/badge.svg?branch=develop" alt="Develop branch"/></a> |
+| Staging  | https://stg.openbeta.io | develop | Partial | — |
+
+---
 
 ## How to build
 
@@ -68,72 +81,57 @@ Make sure you have the following tools installed on your computer:
 - [npm](https://www.npmjs.com/get-npm)
 - [yarn](https://classic.yarnpkg.com/en/docs/install)
 
-Important: For frontend development work you **don't** need to set up the [GraphQL API server](https://github.com/OpenBeta/openbeta-graphql) server project (unless you intend to work on both).
+**Important:** For frontend development work you **don’t** need to set up the [GraphQL API server](https://github.com/OpenBeta/openbeta-graphql) project (unless you intend to work on both).
 
+1. Download the repo to your local machine:
+    ```bash
+    git clone https://github.com/OpenBeta/open-tacos.git
+    ```
 
-1.  Download the repo to your local machine
+2. Build the code:
+    ```bash
+    cd open-tacos
+    git checkout develop
+    yarn install
+    ```
 
-```
-git clone git@github.com:OpenBeta/open-tacos.git
-```
+3. Run the app:
+    ```bash
+    yarn dev
+    ```
 
-2.  Build the code
+The application is now available at [http://localhost:3000](http://localhost:3000)
 
-```
-cd open-tacos
-git checkout develop
-yarn install
-```
-
-4.  Run the app
-
-```
-yarn dev
-```
-
-The application is now available at http://localhost:3000
+---
 
 ## Tips
 
 ### API key errors
-
-Some parts of the code such as user profiles, page edit and photo upload require additional API keys.  Without them you'll see a bunch of errors in the log.  If you want to work on those tasks, email viet at openbeta.io for API keys.  See https://github.com/OpenBeta/open-tacos/issues/389 for more info.
+Some parts of the code such as user profiles, page edit, and photo upload require additional API keys.  
+Without them, you'll see errors in the log.  
+If you want to work on those tasks, email **viet@openbeta.io** for API keys.  
+See [Issue #389](https://github.com/OpenBeta/open-tacos/issues/389) for more info.
 
 ### Full stack dev
-
-By default, your local dev environment connects to our staging GraphQL API server.  To connect your environment to the Graph API server running locally:
-```
+By default, your local dev environment connects to our staging GraphQL API server.  
+To connect your environment to the Graph API server running locally:
+```bash
 yarn dev-local
-```
-### Typescript version warning
-You might get build errors or be prompted to downgrade your version of TypeScript. This is due to the linter ```ts-standard``` using an older version of TypeScript.  You can ignore the warning message.
+
+### TypeScript version warning
+You might get build errors or be prompted to downgrade your version of TypeScript.  
+This happens because the linter `ts-standard` uses an older TypeScript version.  
+You can safely ignore the warning message.
+
+---
 
 ### Commit your work-in-progress
-To commit without passing pre-build tests because you're doing a simple/unrelated change or simply wish to save your work-in-progres, run commit with the `--no-verify` flag.  Example:
+To commit without passing pre-build tests (for simple or unrelated changes, or just to save work-in-progress),  
+run the commit command with the `--no-verify` flag. Example:
 
-```
+```bash
 git commit --no-verify -am "saving my work before going climbing"
-```
 
-### Linting errors
-You might get linting errors when run ```yarn lint```. To fix this, if you use VS Code, please make sure you have ```StandardJS``` extension installed and enabled.
-
-## How to contribute
-
-See our general [How to contribute guide](https://docs.openbeta.io/how-to-contribute/overview) for more details.
-
-## Support Us
-
-- Give this repo a star
-- Please consider [making a donation today](https://opencollective.com/openbeta) to help us pay for our infrastructure expenses ($150/month).
-
-## Contributors
-
-Thanks goes to these wonderful people:
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
 <table>
   <tbody>
     <tr>
@@ -252,13 +250,19 @@ Thanks goes to these wonderful people:
   </tbody>
 </table>
 
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
-<!-- ALL-CONTRIBUTORS-LIST:END -->
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.  
+Contributions of **any kind** are welcome. 🎉
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome.
+---
 
 ## License
 
-AGPL
+This project is licensed under the **AGPL License**.  
+See the [LICENSE](./LICENSE) file for details.
